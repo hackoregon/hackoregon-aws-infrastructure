@@ -1,0 +1,89 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Template to create EC2 instances'
+
+Parameters:
+
+    ServerName:
+        Description: The Server's Name
+        Type: String
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+
+    InstanceType:
+        Description: Which instance type should we use to build our server
+        Type: String
+        Default: t2.micro
+
+    AmiName:
+        Description: The Logical AMI Name
+        Type: String
+        AllowedValues:
+          - homeless
+          - housing
+          - transportation
+          - budget
+          - emergencyresponse
+          - bastion
+
+    EnvironmentName:
+      Description: Name of our environment
+      Type: String
+
+    VPC:
+        Description: Choose which VPC this server should be deployed to
+        Type: AWS::EC2::VPC::Id
+
+    AvailabilityZone:
+        Description: Avalaibility Zone to deploy in to
+        Type: String
+
+    Subnet:
+        Description: Avalaibility Zone to deploy in to
+        Type: String
+
+    SecurityGroupId:
+        Description: The Security Groups to use for the EC2 hosts
+        Type: String
+
+    KeyPairName:
+        Description: The Key Pair name to use for access to ecs and bastion
+        Type: String
+
+    InstanceType:
+        Description: The instance type we want to use
+        Type: String
+
+Mappings:
+  HackoImageMap:
+    homeless:
+        "AMI": "ami-2e0e834e"
+    transportation:
+        "AMI": "ami-fb0d809b"
+    housing:
+        "AMI": "ami-370c8157"
+    emergencyresponse:
+        "AMI": "ami-4b0a872b"
+    bastion:
+        "AMI": "ami-f173cc91"
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SecurityGroupIds:
+      -
+        !Ref SecurityGroupId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      AvailabilityZone: !Ref AvailabilityZone
+      SubnetId: !Ref Subnet
+      ImageId: !FindInMap [HackoImageMap, !Ref AmiName, AMI]
+      Tags:
+      -
+        Key: Name
+        Value: !Sub ${EnvironmentName} !Sub ${ServerName}
+        Key: Environment
+        Value: !Ref EnvironmentName
