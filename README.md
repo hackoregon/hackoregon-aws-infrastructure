@@ -2,6 +2,11 @@
 
 A Set of YAML templates for deploying on the HackOregon infrastructure on [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). Based on the AWSLabs [EC2 Container Service Reference Architecture](https://github.com/awslabs/ecs-refarch-cloudformation)
 
+## Related Repositories
+
+* [Example Django Docker with CI/CD](https://github.com/hackoregon/backend-service-pattern)
+* [Example Nginix Docker Endpoint Catalog Service with CI/CD](https://github.com/hackoregon/endpoint-service-catalog)
+
 ## Overview
 
 ![infrastructure-overview](images/architecture-overview.png)
