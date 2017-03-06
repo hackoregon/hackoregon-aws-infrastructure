@@ -41,14 +41,10 @@ The templates below are included in this repository and reference architecture:
 | [infrastructure/security-groups.yaml](infrastructure/security-groups.yaml) | This template contains the [security groups](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) required by the entire stack. They are created in a separate nested template, so that they can be referenced by all of the other nested templates. |
 | [infrastructure/load-balancers.yaml](infrastructure/load-balancers.yaml) | This template deploys an ALB to the public subnets, which exposes the various ECS services. It is created in in a separate nested template, so that it can be referenced by all of the other nested templates and so that the various ECS services can register with it. |
 | [infrastructure/ecs-cluster.yaml](infrastructure/ecs-cluster.yaml) | This template deploys an ECS cluster to the private subnets using an Auto Scaling group. |
-|
 | [infrastructure/rds.yaml](infrastructure/rds.yaml) | This is an example of how to deploy RDS postgres service on AWS.  We can do a Single or Multiple AZ deploy.|
-|
 | [infrastructure/ec2-instance.yaml](infrastructure/ec2-instance.yaml) | Example of how to deploy the ec2 instances into the private subnet. the [master.yaml](masteryaml) template has examples for a bastion host and postgres db servers based on hackoregon db AMIs|
-|
 | [services/homelesss-service/service.yaml](infrastructure/homeless-service/service.yaml) | This is an example of a long-running Djanfo DRF ECS service that serves a JSON API for the homelessness project. For the full source for the service, see [HackOregon Back End Service Pattern](https://github.com/hackoregon/backend-service-pattern).|
-|
-| [services/endpoint-service/service.yaml](https://github.com/hackoregon/endpoint-service-catalog) | This is an example of a long-running Ngnix ECS service that needs to connect to another service (product-service) via the load-balanced URL. We use an environment variable to pass the product-service URL to the containers. For the full source for this service, see [HackOregon Endpoint Service Catalog](https://github.com/hackoregon/endpoint-service-catalog). |
+| [services/endpoint-service/service.yaml](https://github.com/hackoregon/endpoint-service-catalog) | This is an example of a long-running Ngnix ECS service that provides a static cataog of available services via the load-balanced URL.  For the full source for this service, see [HackOregon Endpoint Service Catalog](https://github.com/hackoregon/endpoint-service-catalog). |
 
 After the CloudFormation templates have been deployed, the [stack outputs](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) contain a link to the load-balanced URLs for each of the deployed microservices.
 
