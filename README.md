@@ -1,6 +1,6 @@
 # HackOregon 2017 - Infrastructure
 
-A Set of YAML templates for deploying on the HackOregon infrastructure on [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). Based on the AWSLabs [EC2 Container Service Reference Architecture](https://github.com/awslabs/ecs-refarch-cloudformation)
+A Set of YAML templates for deploying the HackOregon infrastructure on [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). Based on the AWSLabs [EC2 Container Service Reference Architecture](https://github.com/awslabs/ecs-refarch-cloudformation)
 
 ## Related Repositories
 
