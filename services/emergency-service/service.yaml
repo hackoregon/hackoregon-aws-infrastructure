@@ -1,6 +1,5 @@
 Description: >
-    This is an example of a long running ECS service that serves a JSON API of homeless.
-
+    ECS Service - HackOregon Emergency Response API
 Parameters:
 
     VPC:
@@ -35,7 +34,7 @@ Parameters:
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /homeless*
+        Default: /emergency*
 
 Resources:
 
@@ -48,19 +47,19 @@ Resources:
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers:
-                - ContainerName: "homeless-service"
+                - ContainerName: "emergency-service"
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
-            Family: homeless-service
+            Family: emergency-service
             ContainerDefinitions:
-                - Name: homeless-service
+                - Name: emergency-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/homeless-service:latest
-                  Memory: 128
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service:latest
+                  Memory: 100
                   Environment:
                     - Name: CONFIG_BUCKET
                       Value: !Ref ConfigBucket
@@ -91,7 +90,7 @@ Resources:
             Matcher:
                 HttpCode: 200-299
             HealthCheckIntervalSeconds: 40
-            HealthCheckPath: /homeless/
+            HealthCheckPath: /emergency/
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 30
             HealthyThresholdCount: 2
@@ -100,7 +99,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 5
+            Priority: 3
             Conditions:
                 - Field: path-pattern
                   Values:

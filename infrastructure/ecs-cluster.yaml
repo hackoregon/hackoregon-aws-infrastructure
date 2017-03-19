@@ -88,8 +88,6 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} ECS host
-                - Key: Environment
-                  Value: EnvironmentName
                   PropagateAtLaunch: true
         CreationPolicy:
             ResourceSignal:

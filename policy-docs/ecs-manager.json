@@ -1,0 +1,42 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [{
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStack*",
+                "cloudformation:DeleteStack",
+                "cloudformation:UpdateStack",
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:Describe*",
+                "ecs:List*",
+                "ecs:Describe*",
+                "ecs:CreateService",
+                "ecs:RegisterTaskDefinition",
+                "ecs:ListTaskDefinitions",
+                "ecs:DescribeTaskDefinition",
+                "application-autoscaling:PutScalingPolicy",
+                "application-autoscaling:RegisterScalableTarget",
+                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                "elasticloadbalancing:Describe*",
+                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                "elasticloadbalancing:DeregisterTargets",
+                "elasticloadbalancing:DescribeTargetGroups",
+                "elasticloadbalancing:DescribeTargetHealth",
+                "elasticloadbalancing:RegisterTargets",
+                "application-autoscaling:Describe*",
+                "iam:AttachRolePolicy",
+                "iam:CreateRole",
+                "iam:GetPolicy",
+                "iam:GetPolicyVersion",
+                "iam:GetRole",
+                "iam:ListAttachedRolePolicies",
+                "iam:ListRoles",
+                "iam:ListGroups",
+                "iam:ListUsers",
+                "cloudwatch:DescribeAlarms",
+                "cloudwatch:PutMetricAlarm"
+            ],
+            "Resource": "*"
+    }]
+}
