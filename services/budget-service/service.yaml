@@ -93,7 +93,7 @@ Resources:
             HealthCheckPath: /budget/
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 30
-            HealthyThresholdCount: 2
+            HealthyThresholdCount: 5
 
     ListenerRule:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
