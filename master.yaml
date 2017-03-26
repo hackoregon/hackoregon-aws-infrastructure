@@ -81,7 +81,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
-                ProjSettingsDir: budget_proj
+                ProjSettingsDir: budget_proj  
                 Path: /budget*
 
     CivicLabService:
