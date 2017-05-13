@@ -89,11 +89,11 @@ Resources:
             Protocol: HTTP
             Matcher:
                 HttpCode: 200-299
-            HealthCheckIntervalSeconds: 40
+            HealthCheckIntervalSeconds: 45
             HealthCheckPath: /housing/
             HealthCheckProtocol: HTTP
-            HealthCheckTimeoutSeconds: 30
-            HealthyThresholdCount: 5
+            HealthCheckTimeoutSeconds: 40
+            HealthyThresholdCount: 4
             UnhealthyThresholdCount: 5
 
     ListenerRule:
