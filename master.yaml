@@ -16,8 +16,8 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 13th May 2017
-    Author Dan Carr (ddcarr@gmail.com)
+    Last Modified: 13th May 2018
+    Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
