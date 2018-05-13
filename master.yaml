@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 17th February 2017
+    Last Modified: 13th May 2017
     Author Dan Carr (ddcarr@gmail.com)
 
 Parameters:
@@ -161,7 +161,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
-                ConfigBucket: hacko-transport-config
+                ConfigBucket: hacko-transportation-config
                 DeployTarget: integration
                 ProjSettingsDir: transportationAPI
                 Path: /transport*
