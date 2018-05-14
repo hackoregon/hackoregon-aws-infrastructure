@@ -60,7 +60,7 @@ Resources:
                 - Name: transport-service
                   Essential: true
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/transport-service:latest
-                  Memory: 100
+                  Memory: 2048
                   Environment:
                     - Name: CONFIG_BUCKET
                       Value: !Ref ConfigBucket
