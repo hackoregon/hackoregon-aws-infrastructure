@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 17th February 2017
+    Last Modified: 13th May 2017
     Author Dan Carr (ddcarr@gmail.com)
 
 Parameters:
@@ -83,6 +83,7 @@ Resources:
                 DeployTarget: integration
                 ProjSettingsDir: budget_proj  
                 Path: /budget*
+
 
     CivicLabService:
         Type: AWS::CloudFormation::Stack
@@ -161,10 +162,41 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
-                ConfigBucket: hacko-transport-config
+                ConfigBucket: hacko-transportation-config
                 DeployTarget: integration
                 ProjSettingsDir: transportationAPI
                 Path: /transport*
+
+    Civic2017Service:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ConfigBucket: hacko-civic2017-config
+                DeployTarget: integration
+                ProjSettingsDir: civic-2017_proj  
+                Path: /2017*
+
+    Civic2018Service:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2018-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               ConfigBucket: hacko-civic2018-config
+               DeployTarget: integration
+               ProjSettingsDir: civic-2018_proj  
+               Path: /2018*
+
+
+# New Services placed above this line
 
     BastionHost:
         Type: AWS::CloudFormation::Stack
@@ -199,19 +231,19 @@ Resources:
 Outputs:
 
     BudgetServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the budget service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "budget" ]]
 
     CiviclabServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the civiclab service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
 
     EmerresponeServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the emergency response service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "emerresponse" ]]
 
     EndpointServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the endpoint service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "endpoints" ]]
 
     HomelessServiceUrl:
@@ -219,9 +251,17 @@ Outputs:
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "homeless" ]]
 
     HousingServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the housing service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing" ]]
 
     transportServiceUrl:
-        Description: The URL endpoint for the homeless service
+        Description: The URL endpoint for the transport service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transport" ]]
+
+    civic-2017ServiceUrl:
+        Description: The URL endpoint for the civic-2017 service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2017" ]]
+
+    civi2018ServiceUrl:
+        Description: The URL endpoint for the civic-2018 service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
