@@ -64,7 +64,7 @@ Resources:
             Parameters:
                 EnvironmentName: !Ref AWS::StackName
                 KeyPairName: !Ref KeyPairName
-                InstanceType: t2.micro
+                InstanceType: t2.large
                 ClusterSize: 2
                 VPC: !GetAtt VPC.Outputs.VPC
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
