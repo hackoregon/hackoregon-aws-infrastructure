@@ -27,6 +27,9 @@
 12. Extract the archived log file with `tar xzfv collect.tgz`
 13. All the ECS logs is under `./collect/system/` directory
 
+## Related Information
+- [About ECS log](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/logs.html)
+- [About ECS log collector](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-logs-collector.html)
 
 TODO:
 - [ ] Write a script that get the IPs
