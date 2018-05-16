@@ -169,7 +169,7 @@ Resources:
     Civic2017Service:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/2018-hack-oregon-docs/services/civic-2017-service/service.yaml
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
             Parameters:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
@@ -184,7 +184,7 @@ Resources:
     Civic2018Service:
        Type: AWS::CloudFormation::Stack
        Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/2018-hack-oregon-docs/services/civic-2018-service/service.yaml
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2018-service/service.yaml
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
