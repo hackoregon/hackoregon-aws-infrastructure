@@ -12,7 +12,7 @@
 4. Once you found the container instance you're looking for, go back to the table in \#3 above and click its corresponding link under the `EC2 Instance` column
 5. Get the private IP address of this EC2 instance the same way as described in \#5 of Step 1 above.
 
-## Step 3: Get all the logs 
+## Step 3: Get all the logs from ECS to your local machine 
 1. Copy your aws account private key to the BastionHost by `scp -i <path to your aws account's private key> <**absolute path** to your aws account's private key> ec2-user@<BastionHost ip>
 2. ssh into the BastionHost by `ssh -i <path to your aws account's private key file> ec2-user@<BastionHost's IP> ec2-user@<BastionHost ip>
 3. Once you are in BastionHost, use `ls` to confirm you have the private key at the current directory. Then, ssh into the EC2 instance by `ssh -i <path to the private key> ec2-user@<EC2 instance's private IP>
