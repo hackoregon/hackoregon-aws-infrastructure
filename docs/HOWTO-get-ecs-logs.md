@@ -1,5 +1,3 @@
-#GETTING LOGS FROM ECS
-
 ## Step 1: Find the public IP address of BastionHost
 1. Log in AWS Console
 2. Go to AWS CloudFormation under `Service` > `Management Tools`
@@ -27,8 +25,9 @@
 10. Transfer the archived log file from BastionHost to your local machine by `scp -i <path to your private key> ec2-user@<IP of BastionHost>:/home/ec2-user/collect.tgz .`
 11. Verify the archived log file is finally in your local machine by `ls -lh ./collect.tgz`
 12. Extract the archived log file with `tar xzfv collect.tgz`
-13. All the ECS logs is in `./collect/system/` directory
+13. All the ECS logs is under `./collect/system/` directory
+
 
 TODO:
-[ ] Write a script that get the IPs
-[ ] Write a wrapper script around this AWS logs collector
+- [ ] Write a script that get the IPs
+- [ ] Write a wrapper script around this AWS logs collector
