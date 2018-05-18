@@ -253,10 +253,10 @@ Outputs:
         Description: The URL endpoint for the homeless service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transport" ]]
 
-    civic2017ServiceUrl:
+    Civic2017ServiceUrl:
         Description: The URL endpoint for the civic2017 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2017" ]]
 
-    civic2018ServiceUrl:
+    Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
