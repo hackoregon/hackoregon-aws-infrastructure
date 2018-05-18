@@ -79,26 +79,6 @@
                         "Essential": true,
                         "Image": "845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017",
                         "Memory": 100,
-                        "Environment": [
-                            {
-                                "Name": "CONFIG_BUCKET",
-                                "Value": {
-                                    "Ref": "ConfigBucket"
-                                }
-                            },
-                            {
-                                "Name": "DEPLOY_TARGET",
-                                "Value": {
-                                    "Ref": "DeployTarget"
-                                }
-                            },
-                            {
-                                "Name": "PROJ_SETTINGS_DIR",
-                                "Value": {
-                                    "Ref": "ProjSettingsDir"
-                                }
-                            }
-                        ],
                         "PortMappings": [
                             {
                                 "ContainerPort": 3000
