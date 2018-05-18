@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 16th May 2018
+    Last Modified: 18th May 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -190,6 +190,18 @@ Resources:
                Host: staging-2018.civicpdx.org 
                Path: /*
 
+    Transportation-systemsService:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: staging-2018.civicpdx.org 
+               Path: /transportation-systems
+
 
 # New Services placed above this line
 
@@ -257,6 +269,6 @@ Outputs:
         Description: The URL endpoint for the civic2017 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2017" ]]
 
-    Civic2018ServiceUrl:
-        Description: The URL endpoint for the civic2018 service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+    Transportation-systemsServiceUrl:
+        Description: The URL endpoint for the 2018 transportation-systems service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "/transportation-systems" ]]
