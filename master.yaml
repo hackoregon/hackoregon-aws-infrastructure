@@ -175,9 +175,6 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
-                ConfigBucket: hacko-civic2017-config
-                DeployTarget: integration
-                ProjSettingsDir: civic2017_proj 
                 Host: 2017.civicpdx.org 
                 Path: /*
 
@@ -190,9 +187,6 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               ConfigBucket: hacko-civic2018-config
-               DeployTarget: integration
-               ProjSettingsDir: civic2018_proj 
                Host: staging-2018.civicpdx.org 
                Path: /*
 
