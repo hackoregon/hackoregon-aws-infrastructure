@@ -55,7 +55,7 @@ Resources:
                 - Name: transportation-systems-service
                   Essential: true
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/transportation-systems-service:latest
-                  Memory: 100
+                  Memory: 2048
                   PortMappings:
                     - ContainerPort: 3000
                   LogConfiguration:
