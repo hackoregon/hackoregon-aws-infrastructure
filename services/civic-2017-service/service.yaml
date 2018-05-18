@@ -63,7 +63,7 @@ Resources:
             ContainerDefinitions:
                 - Name: civic-2017-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
                   Memory: 100
                   PortMappings:
                     - ContainerPort: 3000
