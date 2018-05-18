@@ -19,18 +19,6 @@ Parameters:
         Description: The Application Load Balancer listener to register with
         Type: String
 
-    ConfigBucket:
-        Description: The configuration bucket we want to use
-        Type: String
-
-    DeployTarget:
-        Description: Which environment (Valid Values - integration, production)
-        Type: String
-
-    ProjSettingsDir:
-        Description: the relative directory path where we keep the app config
-        Type: String
-
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
