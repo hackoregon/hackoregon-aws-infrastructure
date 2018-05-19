@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 16th May 2018
+    Last Modified: 19th May 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -189,6 +189,18 @@ Resources:
                Listener: !GetAtt ALB.Outputs.Listener
                Host: staging-2018.civicpdx.org 
                Path: /*
+
+    Disaster-ResilienceService:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org 
+               Path: /disaster-resilience
 
 
 # New Services placed above this line
