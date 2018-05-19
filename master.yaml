@@ -273,6 +273,6 @@ Outputs:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
 
-    Transportation-systemsServiceUrl:
+    TransportationSystemsServiceUrl:
         Description: The URL endpoint for the 2018 transportation-systems service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "/transportation-systems" ]]
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transportation-systems" ]]
