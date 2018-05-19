@@ -272,3 +272,7 @@ Outputs:
     Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+    DisasterResilienceServiceUrl:
+        Description: The URL endpoint for the 2018 disaster-resilience service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
