@@ -1,6 +1,6 @@
 Description: >
     ECS Service - HackOregon 2018 transport-systems API
-    Last Modified: 18th May 2018
+    Last Modified: 19th May 2018
     Author Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -25,7 +25,7 @@ Parameters:
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
-        Default: staging-2018.civicpdx.org
+        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
@@ -44,7 +44,7 @@ Resources:
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers:
                 - ContainerName: "transportation-systems-service"
-                  ContainerPort: 3000
+                  ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
@@ -57,7 +57,7 @@ Resources:
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/transportation-systems-service:latest
                   Memory: 2048
                   PortMappings:
-                    - ContainerPort: 3000
+                    - ContainerPort: 8000
                   LogConfiguration:
                     LogDriver: awslogs
                     Options:
