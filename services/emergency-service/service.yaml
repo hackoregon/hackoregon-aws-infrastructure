@@ -1,5 +1,8 @@
 Description: >
     ECS Service - HackOregon Emergency Response API
+    Last Modified: 19th May 2018
+    By Ian Turner (iant18150@gmail.com)
+
 Parameters:
 
     VPC:
@@ -30,6 +33,11 @@ Parameters:
     ProjSettingsDir:
         Description: the relative directory path where we keep the app config
         Type: String
+    
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
@@ -102,6 +110,9 @@ Resources:
             ListenerArn: !Ref Listener
             Priority: 3
             Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
                 - Field: path-pattern
                   Values:
                     - !Ref Path

@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 16th May 2018
+    Last Modified: 19th May 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -81,7 +81,8 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
-                ProjSettingsDir: budget_proj  
+                ProjSettingsDir: budget_proj
+                Host: service.civicpdx.org
                 Path: /budget*
 
     CivicLabService:
@@ -96,6 +97,7 @@ Resources:
                 ConfigBucket: hacko-civiclab-config
                 DeployTarget: integration
                 ProjSettingsDir: civiclabSettings
+                Host: service.civicpdx.org
                 Path: /
 
     EmerreponseService:
@@ -110,6 +112,7 @@ Resources:
                 ConfigBucket: hacko-emerresponse-config
                 DeployTarget: integration
                 ProjSettingsDir: emerresponseAPI
+                Host: service.civicpdx.org
                 Path: /emergency*
 
     EndPoints:
@@ -122,6 +125,7 @@ Resources:
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
                 ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+                Host: service.civicpdx.org
                 Path: /endpoints*
 
     HomelessService:
@@ -136,6 +140,7 @@ Resources:
                 ConfigBucket: hacko-homeless-config
                 DeployTarget: integration
                 ProjSettingsDir: homelessAPI
+                Host: service.civicpdx.org
                 Path: /homeless*
 
     HousingService:
@@ -150,6 +155,7 @@ Resources:
                 ConfigBucket: hacko-housing-config
                 DeployTarget: integration
                 ProjSettingsDir: housingAPI
+                Host: service.civicpdx.org
                 Path: /housing*
 
     transportService:
@@ -164,6 +170,7 @@ Resources:
                 ConfigBucket: hacko-transportation-config
                 DeployTarget: integration
                 ProjSettingsDir: transDjango
+                Host: service.civicpdx.org
                 Path: /transport*
 
     Civic2017Service:

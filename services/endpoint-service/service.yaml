@@ -1,4 +1,6 @@
 Description: Web service to display the catalog of team services
+    Last Modified: 19th May 2018
+    By Ian Turner (iant18150@gmail.com)
 
 Parameters:
 
@@ -22,6 +24,11 @@ Parameters:
     Listener:
         Description: The Application Load Balancer listener to register with
         Type: String
+    
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
@@ -90,6 +97,9 @@ Resources:
             ListenerArn: !Ref Listener
             Priority: 4
             Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
                 - Field: path-pattern
                   Values:
                     - !Ref Path
