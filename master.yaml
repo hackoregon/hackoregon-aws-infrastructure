@@ -190,6 +190,19 @@ Resources:
                Host: staging-2018.civicpdx.org 
                Path: /*
 
+
+    DisasterResilienceService:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org 
+               Path: /disaster-resilience
+
     TransportationSystemsService:
        Type: AWS::CloudFormation::Stack
        Properties:
@@ -272,6 +285,10 @@ Outputs:
     Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+    DisasterResilienceServiceUrl:
+        Description: The URL endpoint for the 2018 disaster-resilience service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
 
     TransportationSystemsServiceUrl:
         Description: The URL endpoint for the 2018 transportation-systems service
