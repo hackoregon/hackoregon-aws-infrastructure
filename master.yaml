@@ -81,7 +81,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
-                ProjSettingsDir: budget_proj  
+                ProjSettingsDir: budget_proj
                 Path: /budget*
 
     CivicLabService:
@@ -175,7 +175,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
-                Host: 2017.civicpdx.org 
+                Host: 2017.civicpdx.org
                 Path: /*
 
     Civic2018Service:
@@ -187,11 +187,10 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: staging-2018.civicpdx.org 
+               Host: staging-2018.civicpdx.org
                Path: /*
 
-
-    DisasterResilienceService:
+    2018DR:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
@@ -200,10 +199,10 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /disaster-resilience
 
-    TransportationSystemsService:
+    2018TS:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
@@ -212,7 +211,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /transportation-systems
 
 
@@ -286,10 +285,10 @@ Outputs:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
 
-    DisasterResilienceServiceUrl:
+    2018DRServiceUrl:
         Description: The URL endpoint for the 2018 disaster-resilience service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
 
-    TransportationSystemsServiceUrl:
+    2018TSServiceUrl:
         Description: The URL endpoint for the 2018 transportation-systems service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transportation-systems" ]]
