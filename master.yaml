@@ -190,7 +190,7 @@ Resources:
                Host: staging-2018.civicpdx.org 
                Path: /*
 
-    Transportation-systemsService:
+    TransportationSystemsService:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
