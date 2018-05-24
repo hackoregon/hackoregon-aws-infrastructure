@@ -190,7 +190,7 @@ Resources:
                Host: staging-2018.civicpdx.org 
                Path: /*
 
-    LocalElectionsService:
+    2018LE:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/local-elections-service/service.yaml
@@ -273,6 +273,6 @@ Outputs:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
 
-    LocalElectionsServiceUrl:
+    2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
