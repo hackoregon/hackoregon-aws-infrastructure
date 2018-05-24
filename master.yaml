@@ -190,7 +190,7 @@ Resources:
                Host: staging-2018.civicpdx.org 
                Path: /*
 
-    HousingAffordabilityService:
+    2018HA:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability/service.yaml
@@ -273,6 +273,6 @@ Outputs:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
 
-    HousingAffordabilityServiceUrl:
+    2018HAServiceUrl:
         Description: The URL endpoint for the 2018 housing-affordability service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing-affordability" ]]
