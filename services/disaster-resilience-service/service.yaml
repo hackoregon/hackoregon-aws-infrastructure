@@ -1,5 +1,8 @@
 Description: >
-    ECS Service - HackOregon Budget API
+    ECS Service - HackOregon 2018 disaster-resilience API
+    Last Modified: 19th May 2018
+    Author Ian Turner (iant18150@gmail.com)
+
 Parameters:
 
     VPC:
@@ -22,12 +25,12 @@ Parameters:
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
-        Default: 2017.civicpdx.org
+        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /2017
+        Default: /disaster-resilience
 
 Resources:
 
@@ -40,21 +43,21 @@ Resources:
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers:
-                - ContainerName: "civic-2017-service"
-                  ContainerPort: 3000
+                - ContainerName: "disaster-resilience-service"
+                  ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
-            Family: civic-2017-service
+            Family: disaster-resilience-service
             ContainerDefinitions:
-                - Name: civic-2017-service
+                - Name: disaster-resilience-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/disaster-resilience-service:latest
                   Memory: 100
                   PortMappings:
-                    - ContainerPort: 3000
+                    - ContainerPort: 8000
                   LogConfiguration:
                     LogDriver: awslogs
                     Options:
@@ -76,7 +79,7 @@ Resources:
             Matcher:
                 HttpCode: 200-299
             HealthCheckIntervalSeconds: 45
-            HealthCheckPath: /2017/
+            HealthCheckPath: /disaster-resilience
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 40
             HealthyThresholdCount: 4
@@ -86,14 +89,14 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 10
+            Priority: 35
             Conditions:
-                - Field: path-pattern
-                  Values:
-                    - !Ref Path
                 - Field: host-header
                   Values:
                     - !Ref Host
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
  
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
