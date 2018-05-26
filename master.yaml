@@ -197,9 +197,9 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /local-elections
 
     2018ND:
@@ -209,9 +209,9 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /neighborhood-development
 
     2018HA:
@@ -221,7 +221,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
                Path: /housing-affordability
@@ -233,7 +233,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
                Path: /disaster-resilience
@@ -245,7 +245,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
                Path: /transportation-systems
@@ -323,7 +323,7 @@ Outputs:
     2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
-        
+
     2018NDServiceUrl:
         Description: The URL endpoint for the 2018 neighborhood-development service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
