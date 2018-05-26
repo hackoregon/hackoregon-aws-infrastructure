@@ -81,7 +81,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
-                ProjSettingsDir: budget_proj  
+                ProjSettingsDir: budget_proj
                 Path: /budget*
 
     CivicLabService:
@@ -175,7 +175,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
-                Host: 2017.civicpdx.org 
+                Host: 2017.civicpdx.org
                 Path: /*
 
     Civic2018Service:
@@ -187,7 +187,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: staging-2018.civicpdx.org 
+               Host: staging-2018.civicpdx.org
                Path: /*
 
     2018LE:
@@ -202,6 +202,53 @@ Resources:
                Host: service.civicpdx.org 
                Path: /local-elections
 
+    2018ND:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/neighborhood-development-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org 
+               Path: /neighborhood-development
+
+    2018HA:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org
+               Path: /housing-affordability
+
+    2018DR:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org
+               Path: /disaster-resilience
+
+    2018TS:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org
+               Path: /transportation-systems
 
 # New Services placed above this line
 
@@ -276,3 +323,19 @@ Outputs:
     2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
+        
+    2018NDServiceUrl:
+        Description: The URL endpoint for the 2018 neighborhood-development service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
+
+    2018HAServiceUrl:
+        Description: The URL endpoint for the 2018 housing-affordability service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing-affordability" ]]
+
+    2018DRServiceUrl:
+        Description: The URL endpoint for the 2018 disaster-resilience service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
+
+    2018TSServiceUrl:
+        Description: The URL endpoint for the 2018 transportation-systems service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transportation-systems" ]]
