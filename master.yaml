@@ -190,6 +190,18 @@ Resources:
                Host: staging-2018.civicpdx.org
                Path: /*
 
+    2018ND:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/neighborhood-development-service/service.yaml
+           Parameters:
+               VPC: !GetAtt VPC.Outputs.VPC
+               Cluster: !GetAtt ECS.Outputs.Cluster
+               DesiredCount: 2
+               Listener: !GetAtt ALB.Outputs.Listener
+               Host: service.civicpdx.org 
+               Path: /neighborhood-development
+
     2018HA:
        Type: AWS::CloudFormation::Stack
        Properties:
@@ -225,7 +237,6 @@ Resources:
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
                Path: /transportation-systems
-
 
 # New Services placed above this line
 
@@ -296,6 +307,10 @@ Outputs:
     Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+    2018NDServiceUrl:
+        Description: The URL endpoint for the 2018 neighborhood-development service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
 
     2018HAServiceUrl:
         Description: The URL endpoint for the 2018 housing-affordability service
