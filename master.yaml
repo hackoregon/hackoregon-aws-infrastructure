@@ -236,7 +236,7 @@ Resources:
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
-               Path: /disaster-resilience
+               Path: /disaster-resilience*
 
     2018TS:
        Type: AWS::CloudFormation::Stack
