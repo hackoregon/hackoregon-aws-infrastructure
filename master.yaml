@@ -197,7 +197,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org 
                Path: /local-elections
@@ -209,7 +209,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org 
                Path: /neighborhood-development
@@ -221,7 +221,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
+               DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
                Path: /housing-affordability
