@@ -1,7 +1,7 @@
 Description: >
     ECS Service - HackOregon 2018 disaster-resilience API
-    Last Modified: 19th May 2018
-    Author Ian Turner (iant18150@gmail.com)
+    Last Modified: 26th May 2018
+    Author Ian Turner (iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
@@ -55,7 +55,7 @@ Resources:
                 - Name: disaster-resilience-service
                   Essential: true
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/disaster-resilience-service:latest
-                  Memory: 100
+                  Memory: 300
                   PortMappings:
                     - ContainerPort: 8000
                   LogConfiguration:
