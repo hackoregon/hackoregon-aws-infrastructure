@@ -200,7 +200,7 @@ Resources:
                DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org 
-               Path: /local-elections
+               Path: /local-elections*
 
     2018ND:
        Type: AWS::CloudFormation::Stack
@@ -212,7 +212,7 @@ Resources:
                DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org 
-               Path: /neighborhood-development
+               Path: /neighborhood-development*
 
     2018HA:
        Type: AWS::CloudFormation::Stack
@@ -224,7 +224,7 @@ Resources:
                DesiredCount: 0
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
-               Path: /housing-affordability
+               Path: /housing-affordability*
 
     2018DR:
        Type: AWS::CloudFormation::Stack
@@ -248,7 +248,7 @@ Resources:
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org
-               Path: /transportation-systems
+               Path: /transportation-systems*
 
 # New Services placed above this line
 
