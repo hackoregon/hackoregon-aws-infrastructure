@@ -1,5 +1,5 @@
 Description: >
-    ECS Service - HackOregon Budget API
+    ECS Service - HackOregon Civic 2017 web server
 Parameters:
 
     VPC:

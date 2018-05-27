@@ -1,5 +1,5 @@
 Description: >
-    ECS Service - HackOregon civic-2018 API
+    ECS Service - HackOregon Civic 2018 web server
 Parameters:
 
     VPC:
