@@ -209,7 +209,7 @@ Resources:
            Parameters:
                VPC: !GetAtt VPC.Outputs.VPC
                Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 0
+               DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
                Host: service.civicpdx.org 
                Path: /neighborhood-development*
