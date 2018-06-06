@@ -47,6 +47,12 @@ Resources:
             Role: !Ref ServiceRole
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
+            PlacementStrategies:
+              - Type: spread
+                Field: attribute:ecs.availability-zone
+              - Type: spread
+                Field: instanceId
+
             LoadBalancers:
                 - ContainerName: "homeless-service"
                   ContainerPort: 8000
