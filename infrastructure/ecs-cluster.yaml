@@ -112,6 +112,10 @@ Resources:
                 "Fn::Base64": !Sub |
                     #!/bin/bash
                     yum install -y aws-cfn-bootstrap
+                    echo "ECS_IMAGE_CLEANUP_INTERVAL=10m" >> /etc/ecs/ecs.config
+                    echo "ECS_IMAGE_MINIMUM_CLEANUP_AGE=15m" >> /etc/ecs/ecs.config
+                    echo "ECS_NUM_IMAGES_DELETE_PER_CYCLE=10" >> /etc/ecs/ecs.config
+                    echo "ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=5m" >> /etc/ecs/ecs.config
                     /opt/aws/bin/cfn-init -v --region ${AWS::Region} --stack ${AWS::StackName} --resource ECSLaunchConfiguration
                     /opt/aws/bin/cfn-signal -e $? --region ${AWS::Region} --stack ${AWS::StackName} --resource ECSAutoScalingGroup
 
