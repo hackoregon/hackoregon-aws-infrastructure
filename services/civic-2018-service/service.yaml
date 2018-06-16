@@ -118,6 +118,9 @@ Resources:
                 - Field: host-header
                   Values:
                     - !Ref Host2
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward
