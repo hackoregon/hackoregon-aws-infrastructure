@@ -159,7 +159,7 @@ Resources:
             Parameters:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
+                DesiredCount: 0
                 Listener: !GetAtt ALB.Outputs.Listener
                 ConfigBucket: hacko-transportation-config
                 DeployTarget: integration
