@@ -24,6 +24,11 @@ Parameters:
         Type: String
         Default: staging-2018.civicpdx.org
 
+    Host2:
+        Description: Alias host to register with the Application Load Balancer
+        Type: String
+        Default: civicplatform.org
+
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
@@ -100,7 +105,19 @@ Resources:
                 - Field: path-pattern
                   Values:
                     - !Ref Path
- 
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRule2:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref Listener
+            Priority: 47
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host2
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward
