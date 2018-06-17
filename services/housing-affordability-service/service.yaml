@@ -61,7 +61,7 @@ Resources:
                 - Name: housing-affordability-service
                   Essential: true
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/housing-affordability:latest
-                  Memory: 400
+                  Memory: 500
                   PortMappings:
                     - ContainerPort: 8000
                   LogConfiguration:
