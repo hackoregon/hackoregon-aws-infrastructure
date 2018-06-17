@@ -188,6 +188,7 @@ Resources:
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
                Host: staging-2018.civicpdx.org
+               Host2: civicplatform.org
                Path: /*
 
     2018LE:
@@ -199,7 +200,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /local-elections*
 
     2018ND:
@@ -211,7 +212,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: service.civicpdx.org 
+               Host: service.civicpdx.org
                Path: /neighborhood-development*
 
     2018HA:
@@ -323,7 +324,7 @@ Outputs:
     2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
-        
+
     2018NDServiceUrl:
         Description: The URL endpoint for the 2018 neighborhood-development service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
