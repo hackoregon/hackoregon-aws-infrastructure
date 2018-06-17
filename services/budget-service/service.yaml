@@ -46,6 +46,9 @@ Resources:
             Role: !Ref ServiceRole
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
+            DeploymentConfiguration:
+              MaximumPercent: 200
+              MinimumHealthyPercent: 50
             PlacementStrategies:
               - Type: spread
                 Field: attribute:ecs.availability-zone
