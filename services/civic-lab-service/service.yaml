@@ -54,6 +54,15 @@ Resources:
             Role: !Ref ServiceRole
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
+            DeploymentConfiguration:
+              MaximumPercent: 200
+              MinimumHealthyPercent: 50
+            PlacementStrategies:
+              - Type: spread
+                Field: attribute:ecs.availability-zone
+              - Type: spread
+                Field: instanceId
+
             LoadBalancers:
                 - ContainerName: "civic-lab-service"
                   ContainerPort: 8000
@@ -67,7 +76,7 @@ Resources:
                 - Name: civic-lab-service
                   Essential: true
                   Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/civic-lab-service:latest
-                  Memory: 1024
+                  Memory: 50
                   Environment:
                     - Name: CONFIG_BUCKET
                       Value: !Ref ConfigBucket

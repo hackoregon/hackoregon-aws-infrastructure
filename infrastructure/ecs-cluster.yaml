@@ -47,6 +47,9 @@ Mappings:
     # You can find the latest available on this page of our documentation:
     # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html
     # (note the AMI identifier is region specific)
+    #
+    # Once AMI is upgraded to new version, can remove this mapping code and implement
+    # getting ECS latest AMI from the AWS made available Parameter Store location
 
     AWSRegionToAMI:
         us-east-1:
@@ -56,7 +59,7 @@ Mappings:
         us-west-1:
             AMI: ami-dd104dbd
         us-west-2:
-            AMI: ami-022b9262
+            AMI: ami-d2f489aa
         eu-west-1:
             AMI: ami-a7f2acc1
         eu-central-1:
@@ -107,11 +110,20 @@ Resources:
             KeyName: !Ref KeyPairName
             SecurityGroups:
                 - !Ref SecurityGroup
+            BlockDeviceMappings:
+            - DeviceName: /dev/xvdcz
+              Ebs:
+                VolumeSize: 22
+                VolumeType: gp2
             IamInstanceProfile: !Ref ECSInstanceProfile
             UserData:
                 "Fn::Base64": !Sub |
                     #!/bin/bash
                     yum install -y aws-cfn-bootstrap
+                    echo "ECS_IMAGE_CLEANUP_INTERVAL=10m" >> /etc/ecs/ecs.config
+                    echo "ECS_IMAGE_MINIMUM_CLEANUP_AGE=15m" >> /etc/ecs/ecs.config
+                    echo "ECS_NUM_IMAGES_DELETE_PER_CYCLE=10" >> /etc/ecs/ecs.config
+                    echo "ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=5m" >> /etc/ecs/ecs.config
                     /opt/aws/bin/cfn-init -v --region ${AWS::Region} --stack ${AWS::StackName} --resource ECSLaunchConfiguration
                     /opt/aws/bin/cfn-signal -e $? --region ${AWS::Region} --stack ${AWS::StackName} --resource ECSAutoScalingGroup
 

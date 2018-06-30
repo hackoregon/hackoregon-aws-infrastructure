@@ -1,5 +1,5 @@
 Description: >
-    ECS Service - HackOregon Budget API
+    ECS Service - HackOregon Civic 2017 web server
 Parameters:
 
     VPC:
@@ -39,6 +39,15 @@ Resources:
             Role: !Ref ServiceRole
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
+            DeploymentConfiguration:
+              MaximumPercent: 200
+              MinimumHealthyPercent: 50
+            PlacementStrategies:
+              - Type: spread
+                Field: attribute:ecs.availability-zone
+              - Type: spread
+                Field: instanceId
+
             LoadBalancers:
                 - ContainerName: "civic-2017-service"
                   ContainerPort: 3000
@@ -86,7 +95,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 96
+            Priority: 10
             Conditions:
                 - Field: path-pattern
                   Values:

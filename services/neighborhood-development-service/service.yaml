@@ -1,7 +1,7 @@
 Description: >
-    ECS Service - HackOregon Emergency Response API
-    Last Modified: 19th May 2018
-    By Ian Turner (iant18150@gmail.com)
+    ECS Service - HackOregon 2018 disaster-resilience API
+    Last Modified: 27th May 2018
+    Author Ian Turner (iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
@@ -22,18 +22,6 @@ Parameters:
         Description: The Application Load Balancer listener to register with
         Type: String
 
-    ConfigBucket:
-        Description: The configuration bucket we want to use
-        Type: String
-
-    DeployTarget:
-        Description: Which environment (Valid Values - integration, production)
-        Type: String
-
-    ProjSettingsDir:
-        Description: the relative directory path where we keep the app config
-        Type: String
-    
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
@@ -42,7 +30,7 @@ Parameters:
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /emergency*
+        Default: /neighborhood-development
 
 Resources:
 
@@ -63,26 +51,19 @@ Resources:
               - Type: spread
                 Field: instanceId
             LoadBalancers:
-                - ContainerName: "emergency-service"
+                - ContainerName: "neighborhood-development-service"
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
-            Family: emergency-service
+            Family: neighborhood-development-service
             ContainerDefinitions:
-                - Name: emergency-service
+                - Name: neighborhood-development-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service:latest
-                  Memory: 100
-                  Environment:
-                    - Name: CONFIG_BUCKET
-                      Value: !Ref ConfigBucket
-                    - Name: DEPLOY_TARGET
-                      Value: !Ref DeployTarget
-                    - Name: PROJ_SETTINGS_DIR
-                      Value: !Ref ProjSettingsDir
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/neighborhood-development:latest
+                  Memory: 400
                   PortMappings:
                     - ContainerPort: 8000
                   LogConfiguration:
@@ -106,7 +87,7 @@ Resources:
             Matcher:
                 HttpCode: 200-299
             HealthCheckIntervalSeconds: 45
-            HealthCheckPath: /emergency/
+            HealthCheckPath: /neighborhood-development/
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 40
             HealthyThresholdCount: 4
@@ -116,7 +97,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 3
+            Priority: 25
             Conditions:
                 - Field: host-header
                   Values:
@@ -124,6 +105,7 @@ Resources:
                 - Field: path-pattern
                   Values:
                     - !Ref Path
+ 
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward

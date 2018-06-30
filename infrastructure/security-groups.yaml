@@ -3,6 +3,9 @@ Description: >
     We create them in a seperate nested template, so they can be referenced
     by all of the other nested templates.
 
+    Last Modified: 05 June 2018
+    By Ian Turner(iant18150@gmail.com)
+
 Parameters:
 
     EnvironmentName:
@@ -24,7 +27,9 @@ Resources:
           SecurityGroupIngress:
               # Allow access from anywhere to our Bastion Host
               - CidrIp: 0.0.0.0/0
-                IpProtocol: 22
+                IpProtocol: TCP
+                FromPort: 22
+                ToPort: 22
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-Bastion-Hosts
