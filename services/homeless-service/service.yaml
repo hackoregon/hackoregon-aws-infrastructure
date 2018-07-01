@@ -1,5 +1,7 @@
 Description: >
     This is an example of a long running ECS service that serves a JSON API of homeless.
+    Last Modified: 19th May 2018
+    By Ian Turner (iant18150@gmail.com)
 
 Parameters:
 
@@ -31,6 +33,11 @@ Parameters:
     ProjSettingsDir:
         Description: the relative directory path where we keep the app config
         Type: String
+    
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
@@ -111,6 +118,9 @@ Resources:
             ListenerArn: !Ref Listener
             Priority: 5
             Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
                 - Field: path-pattern
                   Values:
                     - !Ref Path
