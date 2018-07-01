@@ -82,6 +82,7 @@ Resources:
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
                 ProjSettingsDir: budget_proj
+                Host: service.civicpdx.org
                 Path: /budget*
 
     CivicLabService:
