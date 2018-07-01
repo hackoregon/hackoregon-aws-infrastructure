@@ -177,6 +177,7 @@ Resources:
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
                 Host: 2017.civicpdx.org
+                Host2: civicpdx.org
                 Path: /*
 
     Civic2018Service:
