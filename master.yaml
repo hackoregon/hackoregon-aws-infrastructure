@@ -189,8 +189,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
-               Host: staging-2018.civicpdx.org
-               Host2: civicplatform.org
+               Host: civicplatform.org
                Path: /*
 
     2018LE:
