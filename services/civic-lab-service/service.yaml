@@ -1,8 +1,7 @@
 Description: >
-    ECS Service - HackOregon Civic Lab Front-End
-    Last Modified: 19th May 2018
-    By Ian Turner (iant18150@gmail.com)
-
+    ECS Service - HackOregon Civic Lab Front-End for APIs
+    Last Modified: 30th June 2018
+    By Ian Turner (iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 Parameters:
 
     VPC:
