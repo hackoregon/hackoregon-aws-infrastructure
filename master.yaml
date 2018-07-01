@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 04 June 2018
+    Last Modified: 30 June 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -96,6 +96,7 @@ Resources:
                 ConfigBucket: hacko-civiclab-config
                 DeployTarget: integration
                 ProjSettingsDir: civiclabSettings
+                Host: service.civicpdx.org
                 Path: /
 
     EmerreponseService:
@@ -176,6 +177,7 @@ Resources:
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
                 Host: 2017.civicpdx.org
+                Host2: civicpdx.org
                 Path: /*
 
     Civic2018Service:
