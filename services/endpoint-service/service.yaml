@@ -1,7 +1,7 @@
 Description: >
     Web service to display the catalog of team services
-    Last Modified: 19th May 2018
-    By Ian Turner (iant18150@gmail.com)
+    Last Modified: 08 July 2018
+    By Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
@@ -26,11 +26,6 @@ Parameters:
         Description: The Application Load Balancer listener to register with
         Type: String
     
-    Host:
-        Description: The host path to register with the Application Load Balancer
-        Type: String
-        Default: service.civicpdx.org
-
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
@@ -71,7 +66,7 @@ Resources:
             ContainerDefinitions:
                 - Name: endpoint-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/endpoint-service:latest
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/endpoint-service-catalog:latest
                   Memory: 100
                   Environment:
                     - Name: ALB
