@@ -16,7 +16,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 30 June 2018
+    Last Modified: 08 July 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -85,21 +85,6 @@ Resources:
                 Host: service.civicpdx.org
                 Path: /budget*
 
-    CivicLabService:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-lab-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ConfigBucket: hacko-civiclab-config
-                DeployTarget: integration
-                ProjSettingsDir: civiclabSettings
-                Host: service.civicpdx.org
-                Path: /
-
     EmerreponseService:
         Type: AWS::CloudFormation::Stack
         Properties:
@@ -126,7 +111,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
                 Host: service.civicpdx.org
-                Path: /endpoints*
+                Path: /
 
     HomelessService:
         Type: AWS::CloudFormation::Stack
@@ -296,17 +281,13 @@ Outputs:
         Description: The URL endpoint for the homeless service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "budget" ]]
 
-    CiviclabServiceUrl:
-        Description: The URL endpoint for the homeless service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
-
     EmerresponeServiceUrl:
         Description: The URL endpoint for the homeless service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "emerresponse" ]]
 
     EndpointServiceUrl:
         Description: The URL endpoint for the homeless service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "endpoints" ]]
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
 
     HomelessServiceUrl:
         Description: The URL endpoint for the homeless service
