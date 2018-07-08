@@ -31,6 +31,11 @@ Parameters:
         Type: String
         Default: service.civicpdx.org
 
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+        Default: service.civicpdx.org
+
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
