@@ -124,6 +124,7 @@ Resources:
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
                 ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+                Host: service.civicpdx.org
                 Path: /endpoints*
 
     HomelessService:

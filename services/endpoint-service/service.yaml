@@ -23,6 +23,11 @@ Parameters:
         Description: The Application Load Balancer listener to register with
         Type: String
 
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+        Default: service.civicplatform.org
+
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
@@ -98,6 +103,9 @@ Resources:
             ListenerArn: !Ref Listener
             Priority: 4
             Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
                 - Field: path-pattern
                   Values:
                     - !Ref Path
