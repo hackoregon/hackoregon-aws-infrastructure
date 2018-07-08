@@ -34,7 +34,7 @@ Parameters:
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /endpoints*
+        Default: /
 
 Resources:
 
@@ -94,7 +94,7 @@ Resources:
             Matcher:
                 HttpCode: 200-299
             HealthCheckIntervalSeconds: 40
-            HealthCheckPath: /endpoints/
+            HealthCheckPath: /
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 30
             HealthyThresholdCount: 5
