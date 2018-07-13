@@ -1,6 +1,8 @@
 Description: >
     This template deploys an Application Load Balancer that exposes our various ECS services.
     We create them it a seperate nested template, so it can be referenced by all of the other nested templates.
+    Last Modified: 12 July 2018
+    By Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
@@ -39,6 +41,16 @@ Resources:
             LoadBalancerArn: !Ref LoadBalancer
             Port: 80
             Protocol: HTTP
+            DefaultActions:
+                - Type: forward
+                  TargetGroupArn: !Ref DefaultTargetGroup
+
+    LoadBalancerListenerTls:
+        Type: AWS::ElasticLoadBalancingV2::Listener
+        Properties:
+            LoadBalancerArn: !Ref LoadBalancer
+            Port: 443
+            Protocol: HTTPS
             DefaultActions:
                 - Type: forward
                   TargetGroupArn: !Ref DefaultTargetGroup
