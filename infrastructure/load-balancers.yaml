@@ -22,6 +22,18 @@ Parameters:
         Description: Select the Security Group to apply to the Applicaion Load Balancer
         Type: AWS::EC2::SecurityGroup::Id
 
+    PublicAlbAcmCertificate:
+        AllowedPattern: ^$|(arn:aws:acm:)([a-z0-9/:-])*([a-z0-9])$
+        Description: '[ Optional ] The AWS Certification Manager certificate ARN for the ALB certificate - this certificate should be created in the region you wish to run the ALB and must reference the domain name you use below.'
+        Type: String
+
+Conditions:
+
+    SslCertificate:
+        !Not [!Equals [ '', !Ref PublicAlbAcmCertificate ] ]
+    NoSslCertificate:
+        !Equals [ '', !Ref PublicAlbAcmCertificate ]
+
 Resources:
 
     LoadBalancer:
@@ -46,8 +58,11 @@ Resources:
                   TargetGroupArn: !Ref DefaultTargetGroup
 
     LoadBalancerListenerTls:
+        Condition: SslCertificate
         Type: AWS::ElasticLoadBalancingV2::Listener
         Properties:
+            Certificates:
+            - CertificateArn: !Ref PublicAlbAcmCertificate
             LoadBalancerArn: !Ref LoadBalancer
             Port: 443
             Protocol: HTTPS
@@ -79,3 +94,13 @@ Outputs:
     Listener:
         Description: A reference to a port 80 listener
         Value: !Ref LoadBalancerListener
+
+    PublicAlbDnsName:
+        Value:
+            !GetAtt LoadBalancer.DNSName
+    PublicAlbHostname:
+        Value:
+            !If [ NoSslCertificate, !Join [ '', [ 'http://', !GetAtt LoadBalancer.DNSName ] ], !Join [ '', [ 'https://', !GetAtt LoadBalancer.DNSName ] ] ]
+    SslCertificate:
+        Value:
+            !If [ SslCertificate, True, False ]
