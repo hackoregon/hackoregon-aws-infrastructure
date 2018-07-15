@@ -1,6 +1,6 @@
 Description: >
     Web service to display the catalog of team services
-    Last Modified: 08 July 2018
+    Last Modified: 15 July 2018
     By Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
@@ -24,6 +24,10 @@ Parameters:
 
     Listener:
         Description: The Application Load Balancer listener to register with
+        Type: String
+    
+    ListenerTls:
+        Description: The 443 Application Load Balancer listener to register with
         Type: String
     
     Host:
@@ -104,7 +108,23 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 4
+            Priority: 79
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref ListenerTls
+            Priority: 80
             Conditions:
                 - Field: host-header
                   Values:
