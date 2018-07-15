@@ -116,6 +116,23 @@ Resources:
                 - Field: path-pattern
                   Values:
                     - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    # Since the listener rule only applies strictly to / and the project has static assets,
+    # /__assets also needs to be routed into this container
+    ListenerRuleAssets:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref Listener
+            Priority: 80
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
                     - /__assets*
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
@@ -125,7 +142,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref ListenerTls
-            Priority: 80
+            Priority: 81
             Conditions:
                 - Field: host-header
                   Values:
@@ -133,6 +150,23 @@ Resources:
                 - Field: path-pattern
                   Values:
                     - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    # Since the listener rule only applies strictly to / and the project has static assets,
+    # /__assets also needs to be routed into this container
+    ListenerRuleTlsAssets:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref ListenerTls
+            Priority: 82
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
                     - /__assets*
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
