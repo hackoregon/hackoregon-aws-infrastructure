@@ -62,8 +62,8 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::Listener
         Properties:
             Certificates:
-                # - CertificateArn: !Ref PublicAlbAcmCertificate
-                - CertificateArn: arn:aws:acm:us-west-2:845828040396:certificate/22d1eab8-34cb-48ed-b404-91a3ecaeed08
+                - CertificateArn: !Ref PublicAlbAcmCertificate
+                # - CertificateArn: arn:aws:acm:us-west-2:845828040396:certificate/22d1eab8-34cb-48ed-b404-91a3ecaeed08
             LoadBalancerArn: !Ref LoadBalancer
             Port: 443
             Protocol: HTTPS
