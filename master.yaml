@@ -14,7 +14,7 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 13 July 2018
+    Last Modified: 15 July 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -62,7 +62,6 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
                 PublicAlbAcmCertificate: arn:aws:acm:us-west-2:845828040396:certificate/22d1eab8-34cb-48ed-b404-91a3ecaeed08
-                    # !Ref PublicAlbAcmCertificate
 
     ECS:
         Type: AWS::CloudFormation::Stack
