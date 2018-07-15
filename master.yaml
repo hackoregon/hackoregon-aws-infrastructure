@@ -14,13 +14,18 @@ Description: >
     Based on AWSLabs ECS Reference Arhitecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 08 July 2018
+    Last Modified: 15 July 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
 
     KeyPairName:
         Description: Key Pair for access to bastion and ecs host instances
+        Type: String
+
+    PublicAlbAcmCertificate:
+        AllowedPattern: ^$|(arn:aws:acm:)([a-z0-9/:-])*([a-z0-9])$
+        Description: '[ Optional ] The AWS Certification Manager certificate ARN for the ALB certificate - this certificate should be created in the region you wish to run the ALB and must reference the Drupal domain name you use below.'
         Type: String
 
 Resources:
@@ -56,6 +61,7 @@ Resources:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
+                PublicAlbAcmCertificate: arn:aws:acm:us-west-2:845828040396:certificate/22d1eab8-34cb-48ed-b404-91a3ecaeed08
 
     ECS:
         Type: AWS::CloudFormation::Stack
