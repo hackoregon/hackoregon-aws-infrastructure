@@ -121,7 +121,7 @@ Resources:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward
 
-    ListenerRule:
+    ListenerRuleTls:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref ListenerTls
