@@ -61,7 +61,7 @@ Resources:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
-                PublicAlbAcmCertificate: arn:aws:acm:us-west-2:845828040396:certificate/22d1eab8-34cb-48ed-b404-91a3ecaeed08
+                PublicAlbAcmCertificate: arn:aws:acm:us-west-2:845828040396:certificate/ca1d5fc4-f21a-4305-a656-8ac91cd527bc
 
     ECS:
         Type: AWS::CloudFormation::Stack
