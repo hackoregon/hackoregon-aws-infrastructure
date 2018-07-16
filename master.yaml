@@ -11,7 +11,7 @@ Description: >
     Finally, it deploys a suite ECS services from containers published in
     Amazon EC2 Container Registry (Amazon ECR).
 
-    Based on AWSLabs ECS Reference Arhitecture
+    Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
     Last Modified: 15 July 2018
@@ -95,7 +95,23 @@ Resources:
 
 ##### Container Services #####
 
-# 2018 Services
+# API Endpoint catalog
+
+    EndPoints:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+                Host: service.civicpdx.org
+                Path: /
+
+# Frontend Application services
 
     Civic2017Service:
         Type: AWS::CloudFormation::Stack
@@ -123,6 +139,8 @@ Resources:
                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                Host: civicplatform.org
                Path: /*
+
+# 2018 API services
 
     2018LE:
        Type: AWS::CloudFormation::Stack
@@ -189,7 +207,7 @@ Resources:
                Host: service.civicpdx.org
                Path: /transportation-systems*
 
-# 2017 Services
+# 2017 API services
 
     BudgetService:
         Type: AWS::CloudFormation::Stack
@@ -220,20 +238,6 @@ Resources:
                 ProjSettingsDir: emerresponseAPI
                 Host: service.civicpdx.org
                 Path: /emergency*
-
-    EndPoints:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
-                Host: service.civicpdx.org
-                Path: /
 
     HomelessService:
         Type: AWS::CloudFormation::Stack
@@ -282,7 +286,13 @@ Resources:
 
 Outputs:
 
-# 2018 URLs
+# API Endpoint catalog URL
+
+    EndpointServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
+
+# Frontend Application URLs
 
     Civic2017ServiceUrl:
         Description: The URL endpoint for the civic2017 service
@@ -291,6 +301,8 @@ Outputs:
     Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+# 2018 URLs
 
     2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
@@ -321,10 +333,6 @@ Outputs:
     EmerresponeServiceUrl:
         Description: The URL endpoint for the homeless service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "emerresponse" ]]
-
-    EndpointServiceUrl:
-        Description: The URL endpoint for the homeless service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
 
     HomelessServiceUrl:
         Description: The URL endpoint for the homeless service
