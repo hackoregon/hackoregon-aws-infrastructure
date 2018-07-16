@@ -96,6 +96,10 @@ Outputs:
         Description: A reference to a port 80 listener
         Value: !Ref LoadBalancerListener
 
+    ListenerTls:
+        Description: A reference to a port 443 listener
+        Value: !Ref LoadBalancerListenerTls
+
     PublicAlbDnsName:
         Value:
             !GetAtt LoadBalancer.DNSName
