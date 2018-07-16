@@ -106,6 +106,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: 2017.civicpdx.org
                 Host2: civicpdx.org
                 Path: /*
@@ -119,6 +120,7 @@ Resources:
                Cluster: !GetAtt ECS.Outputs.Cluster
                DesiredCount: 2
                Listener: !GetAtt ALB.Outputs.Listener
+               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                Host: civicplatform.org
                Path: /*
 
