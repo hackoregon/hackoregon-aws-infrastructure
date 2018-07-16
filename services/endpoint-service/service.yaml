@@ -1,5 +1,5 @@
 Description: >
-    Web service to display the catalog of team services
+    ECS Service - HackOregon app to display the catalog of APIs
     Last Modified: 15 July 2018
     By Mike Lonergan (mikethecanuck@gmail.com)
 
@@ -16,7 +16,6 @@ Parameters:
     DesiredCount:
         Description: How many instances of this task should we run across our cluster?
         Type: Number
-        Default: 2
 
     ALB:
         Description: The URL of the ALB
@@ -33,12 +32,10 @@ Parameters:
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
-        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /
 
 Resources:
 

@@ -1,7 +1,7 @@
 Description: >
-    ECS Service - HackOregon Housing API
-    Last Modified: 19th May 2018
-    By Ian Turner (iant18150@gmail.com)
+    ECS Service - HackOregon 2017 Housing API
+    Last Modified: 15 July 2018
+    By Ian Turner (iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
     
 Parameters:
 
@@ -16,7 +16,6 @@ Parameters:
     DesiredCount:
         Description: How many instances of this task should we run across our cluster?
         Type: Number
-        Default: 2
 
     Listener:
         Description: The Application Load Balancer listener to register with
@@ -37,12 +36,10 @@ Parameters:
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
-        Default: service.civicpdx.org
 
     Path:
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /housing*
 
 Resources:
 
