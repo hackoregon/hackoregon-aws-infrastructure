@@ -14,7 +14,7 @@ Description: >
     Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 15 July 2018
+    Last Modified: 17 July 2018
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -142,6 +142,32 @@ Resources:
 
 # 2018 API services
 
+    2018DR:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /disaster-resilience*
+
+    2018HA:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /housing-affordability*
+
     2018LE:
        Type: AWS::CloudFormation::Stack
        Properties:
@@ -167,32 +193,6 @@ Resources:
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: service.civicpdx.org
                 Path: /neighborhood-development*
-
-    2018HA:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /housing-affordability*
-
-    2018DR:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /disaster-resilience*
 
     2018TS:
        Type: AWS::CloudFormation::Stack
@@ -304,6 +304,14 @@ Outputs:
 
 # 2018 URLs
 
+    2018DRServiceUrl:
+        Description: The URL endpoint for the 2018 disaster-resilience service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
+
+    2018HAServiceUrl:
+        Description: The URL endpoint for the 2018 housing-affordability service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing-affordability" ]]
+
     2018LEServiceUrl:
         Description: The URL endpoint for the 2018 local-elections service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
@@ -311,14 +319,6 @@ Outputs:
     2018NDServiceUrl:
         Description: The URL endpoint for the 2018 neighborhood-development service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
-
-    2018HAServiceUrl:
-        Description: The URL endpoint for the 2018 housing-affordability service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing-affordability" ]]
-
-    2018DRServiceUrl:
-        Description: The URL endpoint for the 2018 disaster-resilience service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
 
     2018TSServiceUrl:
         Description: The URL endpoint for the 2018 transportation-systems service
