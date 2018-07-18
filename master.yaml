@@ -132,13 +132,13 @@ Resources:
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2018-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: civicplatform.org
-               Path: /*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: civicplatform.org
+                Path: /*
 
 # 2018 API services
 
@@ -147,65 +147,65 @@ Resources:
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/local-elections-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: service.civicpdx.org
-               Path: /local-elections*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /local-elections*
 
     2018ND:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/neighborhood-development-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: service.civicpdx.org
-               Path: /neighborhood-development*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /neighborhood-development*
 
     2018HA:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: service.civicpdx.org
-               Path: /housing-affordability*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /housing-affordability*
 
     2018DR:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: service.civicpdx.org
-               Path: /disaster-resilience*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /disaster-resilience*
 
     2018TS:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
            Parameters:
-               VPC: !GetAtt VPC.Outputs.VPC
-               Cluster: !GetAtt ECS.Outputs.Cluster
-               DesiredCount: 2
-               Listener: !GetAtt ALB.Outputs.Listener
-               ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-               Host: service.civicpdx.org
-               Path: /transportation-systems*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /transportation-systems*
 
 # 2017 API services
 
