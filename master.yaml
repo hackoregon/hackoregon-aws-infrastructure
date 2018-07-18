@@ -218,6 +218,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
                 ProjSettingsDir: budget_proj
@@ -233,6 +234,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ConfigBucket: hacko-emerresponse-config
                 DeployTarget: integration
                 ProjSettingsDir: emerresponseAPI
@@ -248,6 +250,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ConfigBucket: hacko-homeless-config
                 DeployTarget: integration
                 ProjSettingsDir: homelessAPI
@@ -263,6 +266,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ConfigBucket: hacko-housing-config
                 DeployTarget: integration
                 ProjSettingsDir: housingAPI
@@ -278,6 +282,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 0
                 Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ConfigBucket: hacko-transportation-config
                 DeployTarget: integration
                 ProjSettingsDir: transDjango

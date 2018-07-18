@@ -21,6 +21,10 @@ Parameters:
         Description: The Application Load Balancer listener to register with
         Type: String
 
+    ListenerTls:
+        Description: The 443 Application Load Balancer listener to register with
+        Type: String
+
     ConfigBucket:
         Description: The configuration bucket we want to use
         Type: String
@@ -114,6 +118,22 @@ Resources:
         Properties:
             ListenerArn: !Ref Listener
             Priority: 5
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRuleTls:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref ListenerTls
+            Priority: 6
             Conditions:
                 - Field: host-header
                   Values:
