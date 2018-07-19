@@ -117,7 +117,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 7
+            Priority: 56
             Conditions:
                 - Field: host-header
                   Values:
@@ -133,7 +133,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref ListenerTls
-            Priority: 8
+            Priority: 57
             Conditions:
                 - Field: host-header
                   Values:
