@@ -48,7 +48,7 @@ Resources:
           Resource: !Join ['', ['arn:aws:s3:::', !Ref 'WebsiteBucket', /*]]
         - Sid: WriteAccessForS3User
           Effect: Allow
-          Principal: !Ref 'BucketWriterArn'
+          Principal: AWS: !Ref 'BucketWriterArn'
           Action: s3:*Object 
           Resource: !Join ['', ['arn:aws:s3:::', !Ref 'WebsiteBucket', /*]]
   WebsiteCloudfront:
