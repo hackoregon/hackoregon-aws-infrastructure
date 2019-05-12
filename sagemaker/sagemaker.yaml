@@ -1,0 +1,115 @@
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Creates the Data Science lab within AWS Sagemaker. Responsible for provisioning
+  Notebook instances, associating roles and S3 buckets, and deploying lambda
+  functions for automating stopping instances based on idle time.
+
+Resources:
+  SageMakerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: DataScienceNotebook
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "sagemaker.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: notebook-data-science
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - arn:aws:s3:::hacko-data-archive/*
+                  - arn:aws:s3:::hacko-data-science/*
+                  - arn:aws:s3:::hacko-data-staging/*
+              - Effect: Allow
+                Action:
+                  - cloudwatch:DeleteAlarms
+                  - cloudwatch:DescribeAlarms
+                  - cloudwatch:GetMetricData
+                  - cloudwatch:GetMetricStatistics
+                  - cloudwatch:ListMetrics
+                  - cloudwatch:PutMetricAlarm
+                  - cloudwatch:PutMetricData
+                Resource:
+                  - "*"
+
+  AutoShutdownFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: auto-shutdown.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./functions/
+      Description: "Stops any Notebook Instances that aren't tagged keepalive"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "sagemaker:ListNotebookInstances"
+                - "sagemaker:ListTags"
+                - "sagemaker:StopNotebookInstance"
+              Resource: "*"
+
+  ScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "ScheduledRule"
+      ScheduleExpression: "cron(0 9 * * ? *)"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn: !GetAtt AutoShutdownFunction.Arn
+          Id: "AutoShutdownFunction"
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "AutoShutdownFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt ScheduledRule.Arn
+
+
+### NOTEBOOK INSTANCES ############################################################
+
+
+  # Standard Instance
+  ###################
+
+  # CFNInstance:
+  #   Type: AWS::SageMaker::NotebookInstance
+  #   Properties:
+  #     InstanceType: ml.t2.medium
+  #     NotebookInstanceName: CFNInstance
+  #     RoleArn: !GetAtt SageMakerRole.Arn
+  #     VolumeSizeInGB: 5
+
+  # Persistent Instance
+  #####################
+
+  # CFNInstanceKeep:
+  #   Type: AWS::SageMaker::NotebookInstance
+  #   Properties:
+  #     InstanceType: ml.t2.medium
+  #     NotebookInstanceName: CFNInstanceKeep
+  #     RoleArn: !GetAtt SageMakerRole.Arn
+  #     VolumeSizeInGB: 5
+  #     Tags:
+  #       -
+  #         Key: keepalive
+  #         Value: true
