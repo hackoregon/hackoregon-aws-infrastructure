@@ -54,7 +54,14 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 
 ### How to Deploy
 
-Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
+Stack is setup to launch stack in the us-west-2 (Oregon) region in your account.
+
+Launch the `master.yaml` from aws cli with command:
+```
+aws cloudformation create-stack --stack-name <your stack name> --template-body file://<absolute path to the local master.yaml> --capabilities CAPABILITY_NAMED_IAM --parameters  ParameterKey=KeyPairName,ParameterValue=<Name of your AWS account's key pair>
+
+```
+
 
 ### Customize the templates
 
@@ -68,9 +75,9 @@ Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 
 1. Push your container to a registry somewhere (e.g., [Docker Hub](https://hub.docker.com/), [Amazon ECR](https://aws.amazon.com/ecr/)).
 2. Copy one of the existing service templates in [services/*](/services).
-3. Update the `ContainerName` and `Image` parameters to point to your container image instead of the example container.
+3. Update the `ContainerName` and `Image` parameters to point to your container image instead of the example container. Also make sure the `ContainerName` of property `LoadBalancers` of the ECS service matches with the `Name` in `ContainerDefinitions` property of `TaskDefinition`. 
 4. Increment the `ListenerRule` priority number (no two services can have the same priority number - this is used to order the ALB path based routing rules).
-5. Copy one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed.
+5. Copy one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed. Upload the `service.yaml` file of your new service to S3 and update its link in `master.yaml`
 6. Deploy the templates as a new stack, or as an update to an existing stack.
 
 ### Setup centralized container logging
