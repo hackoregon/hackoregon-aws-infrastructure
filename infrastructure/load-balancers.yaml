@@ -1,7 +1,7 @@
 Description: >
     This template deploys an Application Load Balancer that exposes our various ECS services.
     We create them it a seperate nested template, so it can be referenced by all of the other nested templates.
-    Last Modified: 15 July 2018
+    Last Modified: 27 May 2019
     By Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
