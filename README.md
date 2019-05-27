@@ -1,6 +1,6 @@
-# HackOregon 2017 - Infrastructure
+# HackOregon 2017-2019 - Infrastructure
 
-A Set of YAML templates for deploying the HackOregon infrastructure on [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). Based on the AWSLabs [EC2 Container Service Reference Architecture](https://github.com/awslabs/ecs-refarch-cloudformation)
+A Set of YAML templates for deploying the HackOregon infrastructure on [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). Based on the AWSLabs [EC2 Container Service Reference Architecture](https://github.com/awslabs/ecs-refarch-cloudformation).
 
 ## Related Repositories
 
@@ -16,15 +16,14 @@ The repository consists of a set of nested templates that deploy the following:
  - A tiered [VPC](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html) with public and private subnets, spanning an AWS region.
  - A highly available ECS cluster deployed across two [Availability Zones](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) in an [Auto Scaling](https://aws.amazon.com/autoscaling/) group.
  - A pair of [NAT gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html) (one in each zone) to handle outbound traffic.
- - Two interconnecting microservices deployed as [ECS services](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html) (website-service and product-service).
- - An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic.
+ - A variety of microservice and web front-end containers deployed as [ECS services](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html).
+ - An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic to the load-balanced container duplicates.
  - ALB path-based routes for each ECS service to route the inbound traffic to the correct service.
  - Centralized container logging with [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
 
-
 #### Infrastructure-as-Code
 
-Thi template can be used repeatedly to create identical copies of the same stack (or to use as a foundation to start a new stack).
+This template can be used repeatedly to create identical copies of the same stack (or to use as a foundation to start a new stack).
 
 #### Updating and Rollback
 
@@ -42,9 +41,9 @@ The templates below are included in this repository and reference architecture:
 | [infrastructure/load-balancers.yaml](infrastructure/load-balancers.yaml) | This template deploys an ALB to the public subnets, which exposes the various ECS services. It is created in in a separate nested template, so that it can be referenced by all of the other nested templates and so that the various ECS services can register with it. |
 | [infrastructure/ecs-cluster.yaml](infrastructure/ecs-cluster.yaml) | This template deploys an ECS cluster to the private subnets using an Auto Scaling group. |
 | [infrastructure/rds.yaml](infrastructure/rds.yaml) | This is an example of how to deploy RDS postgres service on AWS.  We can do a Single or Multiple AZ deploy.|
-| [infrastructure/ec2-instance.yaml](infrastructure/ec2-instance.yaml) | Example of how to deploy the ec2 instances into the private subnet. the [master.yaml](masteryaml) template has examples for a bastion host and postgres db servers based on hackoregon db AMIs|
-| [services/homelesss-service/service.yaml](infrastructure/homeless-service/service.yaml) | This is an example of a long-running Djanfo DRF ECS service that serves a JSON API for the homelessness project. For the full source for the service, see [HackOregon Back End Service Pattern](https://github.com/hackoregon/backend-service-pattern).|
-| [services/endpoint-service/service.yaml](https://github.com/hackoregon/endpoint-service-catalog) | This is an example of a long-running Ngnix ECS service that provides a static cataog of available services via the load-balanced URL.  For the full source for this service, see [HackOregon Endpoint Service Catalog](https://github.com/hackoregon/endpoint-service-catalog). |
+| [infrastructure/ec2-instance.yaml](infrastructure/ec2-instance.yaml) | Example of how to deploy the ec2 instances into the private subnet. The [master.yaml](masteryaml) template has examples for a bastion host and postgres db servers based on hackoregon db AMIs.|
+| [services/homelesss-service/service.yaml](infrastructure/homeless-service/service.yaml) | This is an example of the long-running Django DRF ECS service that serves a JSON API for the homelessness project. For the full source for the service, see [HackOregon Back End Service Pattern](https://github.com/hackoregon/backend-service-pattern).|
+| [services/endpoint-service/service.yaml](https://github.com/hackoregon/endpoint-service-catalog) | This is an example of a long-running Nginx ECS service that provides a static catalog of available services via the load-balanced URL.  For the full source for this service, see [HackOregon Endpoint Service Catalog](https://github.com/hackoregon/endpoint-service-catalog). |
 
 After the CloudFormation templates have been deployed, the [stack outputs](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) contain a link to the load-balanced URLs for each of the deployed microservices.
 
@@ -55,6 +54,10 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 ### How to Deploy
 
 Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
+
+- from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
+- copy the URL for the `master.yaml` file from S3
+- go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
 
 ### Customize the templates
 
@@ -70,7 +73,7 @@ Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 2. Copy one of the existing service templates in [services/*](/services).
 3. Update the `ContainerName` and `Image` parameters to point to your container image instead of the example container.
 4. Increment the `ListenerRule` priority number (no two services can have the same priority number - this is used to order the ALB path based routing rules).
-5. Copy one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed.
+5. Duplicate one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed.
 6. Deploy the templates as a new stack, or as an update to an existing stack.
 
 ### Setup centralized container logging
@@ -174,10 +177,6 @@ Service:
         MaximumPercent: 200
         MinimumHealthyPercent: 50
 ```
-
-### Add a new item to this list
-
-If you found yourself wishing this set of frequently asked questions had an answer for a particular problem, please [submit a pull request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/). The chances are that others will also benefit from having the answer listed here.
 
 ## Contributing
 
