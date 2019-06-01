@@ -37,41 +37,48 @@ Parameters:
 
 Mappings:
 
-    # These are the latest ECS optimized AMIs as of November 2016:
+    # These are the latest ECS optimized AMIs as of Nov 2018:
     #
-    #   amzn-ami-2016.09.b-amazon-ecs-optimized
-    #   ECS agent:    1.13.1
-    #   Docker:       1.11.2
-    #   ecs-init:     1.13.1-1
+    #   amzn-ami-2018.03.h-amazon-ecs-optimized
+    #   ECS agent:    1.21.0
+    #   Docker:       18.06.1-ce
+    #   ecs-init:     1.21.0-1
     #
     # You can find the latest available on this page of our documentation:
     # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html
     # (note the AMI identifier is region specific)
-    #
-    # Once AMI is upgraded to new version, can remove this mapping code and implement
-    # getting ECS latest AMI from the AWS made available Parameter Store location
 
     AWSRegionToAMI:
-        us-east-1:
-            AMI: ami-b2df2ca4
         us-east-2:
-            AMI: ami-832b0ee6
-        us-west-1:
-            AMI: ami-dd104dbd
+            AMI: ami-0a0c6574ce16ce87a
+        us-east-1:
+            AMI: ami-07eb698ce660402d2
         us-west-2:
-            AMI: ami-d2f489aa
+            AMI: ami-09568291a9d6c804c
+        us-west-1:
+            AMI: ami-04c22ba97a0c063c4
+        eu-west-3:
+            AMI: ami-0a0948de946510ec0
+        eu-west-2:
+            AMI: ami-0cb31bf24b130a0f9
         eu-west-1:
-            AMI: ami-a7f2acc1
+            AMI: ami-066826c6a40879d75
         eu-central-1:
-            AMI: ami-ec2be583
+            AMI: ami-0b9fee3a2d0596ed1
+        ap-northeast-2:
+            AMI: ami-0b52e57bed048ca48
         ap-northeast-1:
-            AMI: ami-c393d6a4
-        ap-southeast-1:
-            AMI: ami-a88530cb
+            AMI: ami-0edf19001c48838c7
         ap-southeast-2:
-            AMI: ami-8af8ffe9
-        ap-cenral-1:
-            AMI: ami-ead5688e
+            AMI: ami-08c26730c8ee004fa
+        ap-southeast-1:
+            AMI: ami-08d4fe232c67b81b8
+        ca-central-1:
+            AMI: ami-055750f063052ec55
+        ap-south-1:
+            AMI: ami-05f009513cd58ac90
+        sa-east-1:
+            AMI: ami-0ada25501ac1375b3
 
 Resources:
 
