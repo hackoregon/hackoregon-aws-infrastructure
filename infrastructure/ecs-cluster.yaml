@@ -11,7 +11,7 @@ Parameters:
     InstanceType:
         Description: Which instance type should we use to build the ECS cluster?
         Type: String
-        Default: t2.micro
+        Default: t2.large
 
     ClusterSize:
         Description: How many ECS hosts do you want to initially deploy?
@@ -34,44 +34,10 @@ Parameters:
         Description: Key Pair for access the ecs host instances
         Type: String
 
-
-Mappings:
-
-    # These are the latest ECS optimized AMIs as of November 2016:
-    #
-    #   amzn-ami-2016.09.b-amazon-ecs-optimized
-    #   ECS agent:    1.13.1
-    #   Docker:       1.11.2
-    #   ecs-init:     1.13.1-1
-    #
-    # You can find the latest available on this page of our documentation:
-    # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html
-    # (note the AMI identifier is region specific)
-    #
-    # Once AMI is upgraded to new version, can remove this mapping code and implement
-    # getting ECS latest AMI from the AWS made available Parameter Store location
-
-    AWSRegionToAMI:
-        us-east-1:
-            AMI: ami-b2df2ca4
-        us-east-2:
-            AMI: ami-832b0ee6
-        us-west-1:
-            AMI: ami-dd104dbd
-        us-west-2:
-            AMI: ami-d2f489aa
-        eu-west-1:
-            AMI: ami-a7f2acc1
-        eu-central-1:
-            AMI: ami-ec2be583
-        ap-northeast-1:
-            AMI: ami-c393d6a4
-        ap-southeast-1:
-            AMI: ami-a88530cb
-        ap-southeast-2:
-            AMI: ami-8af8ffe9
-        ap-cenral-1:
-            AMI: ami-ead5688e
+    ECSAMI:
+        Description: ECS-Optimized AMI ID
+        Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+        Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
 
 Resources:
 
@@ -105,7 +71,7 @@ Resources:
     ECSLaunchConfiguration:
         Type: AWS::AutoScaling::LaunchConfiguration
         Properties:
-            ImageId:  !FindInMap [AWSRegionToAMI, !Ref "AWS::Region", AMI]
+            ImageId:  !Ref ECSAMI
             InstanceType: !Ref InstanceType
             KeyName: !Ref KeyPairName
             SecurityGroups:
