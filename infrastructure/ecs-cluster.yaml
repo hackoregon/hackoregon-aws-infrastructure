@@ -11,7 +11,7 @@ Parameters:
     InstanceType:
         Description: Which instance type should we use to build the ECS cluster?
         Type: String
-        Default: t2.micro
+        Default: t2.large
 
     ClusterSize:
         Description: How many ECS hosts do you want to initially deploy?
@@ -33,7 +33,6 @@ Parameters:
     KeyPairName:
         Description: Key Pair for access the ecs host instances
         Type: String
-
 
     ECSAMI:
         Description: ECS-Optimized AMI ID
