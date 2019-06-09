@@ -137,7 +137,8 @@ Resources:
         Type: AWS::IAM::Role
         Properties:
             Path: /
-            RoleName: !Sub ${EnvironmentName}-ECSRole-${AWS::Region}
+            RoleName: !Sub hack-integration-ECSRole-${AWS::Region}
+#            RoleName: !Sub ${EnvironmentName}-ECSRole-${AWS::Region}
             AssumeRolePolicyDocument: |
                 {
                     "Statement": [{
@@ -172,6 +173,41 @@ Resources:
                             ],
                             "Resource": "*"
                         }]
+                    }
+                - PolicyName: ssm-access
+                  PolicyDocument: 
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ssm:DescribeParameters"
+                                ],
+                                "Resource": "*"
+                            },
+                            {
+                                "Sid": "Stmt1482841904000",
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ssm:GetParameters"
+                                ],
+                                "Resource": [
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2018/*",
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/production/2018/*"
+                                ]
+                            },
+                            {
+                                "Sid": "Stmt1482841948000",
+                                "Effect": "Allow",
+                                "Action": [
+                                    "kms:Decrypt"
+                                ],
+                                "Resource": [
+                                    "arn:aws:kms:us-west-2:845828040396:key/0280a59b-d8f5-44e0-8b51-80aec2f27275"
+                                ]
+                            }
+                        ]
                     }
 
     ECSInstanceProfile:
