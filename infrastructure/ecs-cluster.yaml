@@ -137,8 +137,7 @@ Resources:
         Type: AWS::IAM::Role
         Properties:
             Path: /
-            RoleName: !Sub hack-integration-ECSRole-${AWS::Region}
-#            RoleName: !Sub ${EnvironmentName}-ECSRole-${AWS::Region}
+            RoleName: !Sub ${EnvironmentName}-ECSRole-${AWS::Region}
             AssumeRolePolicyDocument: |
                 {
                     "Statement": [{
