@@ -113,3 +113,11 @@ Resources:
   #       -
   #         Key: keepalive
   #         Value: true
+
+  DarrylMichaudBox:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties:
+      InstanceType: ml.t2.medium
+      NotebookInstanceName: DarrylMichaud
+      RoleArn: !GetAtt SageMakerRole.Arn
+      VolumeSizeInGB: 5
