@@ -116,7 +116,9 @@ As well as configuring Auto Scaling for the ECS hosts (your pool of compute), yo
 
 ### Deploy multiple environments (e.g., dev, test, pre-production)
 
-Deploy another CloudFormation stack from the same set of templates to create a new environment. The stack name provided when deploying the stack is prefixed to all taggable resources (e.g., EC2 instances, VPCs, etc.) so you can distinguish the different environment resources in the AWS Management Console.
+Deploy another CloudFormation stack from the same set of templates to create a new environment. The stack name provided when deploying the stack is prefixed to all taggable resources (e.g. EC2 instances, VPCs, etc.) so you can distinguish the different environment resources in the AWS Management Console.
+
+To distinguish between e.g. staging and production configurations, you will need to author multiple `master.yaml` files, each with the specific parameter values (e.g. `Host` or `PublicAlbAcmCertificate`) that address e.g. the specific DNS addresses to reach each stack's otherwise-nearly-identical resources.
 
 ### Change the VPC or subnet IP ranges
 
