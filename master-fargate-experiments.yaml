@@ -106,8 +106,7 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-                ## THIS PROBABLY NEEDS ITS OWN SECURITY GROUP
-                # SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls

@@ -18,6 +18,10 @@ Parameters:
 
 Resources:
 
+## TODO: Refactor these security groups so that ECSHostSecurityGroup references
+## the "web server access" and "SSH access" that is defined as common, and then 
+## also point BastionHost and LoadBalancer at these common resources
+
   # This security group defines who/where is allowed to access the Bastion host directly.
   BastionHostSecurityGroup:
       Type: AWS::EC2::SecurityGroup
@@ -85,6 +89,35 @@ Resources:
             - Key: Name
               Value: !Sub ${EnvironmentName}-LoadBalancers
 
+  ## EXPERIMENTAL 2019-06-29 Mike Lonergan
+  # This security group defines who/where is allowed to access the Tasks running in ECS
+  ECSTaskSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+          VpcId: !Ref VPC
+          GroupDescription: Access to the ECS tasks/containers that run on ECS (EXPERIMENTAL)
+          SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: '80'
+            ToPort: '80'
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: '443'
+            ToPort: '443'
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: '80'
+            ToPort: '8000'
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: '8000'
+            ToPort: '8000'
+            CidrIp: 0.0.0.0/0
+          Tags:
+              - Key: Name
+                Value: !Sub ${EnvironmentName}-ECS-Hosts
+
+
 Outputs:
 
     ECSHostSecurityGroup:
@@ -102,3 +135,7 @@ Outputs:
     DBSecurityGroup:
         Description: A reference to the security group for load balancers
         Value: !Ref DBSecurityGroup
+
+    ECSTaskSecurityGroup:
+        Description: A reference to the security group for ECS hosts
+        Value: !Ref ECSTaskSecurityGroup
