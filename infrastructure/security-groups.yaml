@@ -97,6 +97,11 @@ Resources:
           VpcId: !Ref VPC
           GroupDescription: Access to the ECS tasks/containers that run on ECS (EXPERIMENTAL)
           SecurityGroupIngress:
+          # Intended to allow health check traffic to the containerized app
+          - IpProtocol: tcp
+            FromPort: '8000'
+            ToPort: '8000'
+            CidrIp: 0.0.0.0/0
           - IpProtocol: tcp
             FromPort: '80'
             ToPort: '80'
@@ -104,14 +109,6 @@ Resources:
           - IpProtocol: tcp
             FromPort: '443'
             ToPort: '443'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '80'
-            ToPort: '8000'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '8000'
-            ToPort: '8000'
             CidrIp: 0.0.0.0/0
           Tags:
               - Key: Name
