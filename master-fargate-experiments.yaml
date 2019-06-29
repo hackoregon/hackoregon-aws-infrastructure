@@ -1,0 +1,359 @@
+Description: >
+
+    This template deploys a VPC, with a pair of public and private subnets spread
+    across two Availabilty Zones. It deploys an Internet Gateway, with a default
+    route on the public subnets. It deploys a pair of NAT Gateways (one in each AZ),
+    and default routes for them in the private subnets.
+
+    It then deploys a highly available ECS cluster using an AutoScaling Group, with
+    ECS hosts distributed across multiple Availability Zones.
+
+    Finally, it deploys a suite ECS services from containers published in
+    Amazon EC2 Container Registry (Amazon ECR).
+
+    Based on AWSLabs ECS Reference Architecture
+    https://github.com/awslabs/ecs-refarch-cloudformation
+
+    Last Modified: 17 July 2018
+    Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
+
+Parameters:
+
+    KeyPairName:
+        Description: Key Pair for access to bastion and ecs host instances
+        Type: String
+
+    PublicAlbAcmCertificate:
+        AllowedPattern: ^$|(arn:aws:acm:)([a-z0-9/:-])*([a-z0-9])$
+        Description: '[ Optional ] The AWS Certification Manager certificate ARN for the ALB certificate - this certificate should be created in the region you wish to run the ALB and must reference the Drupal domain name you use below.'
+        Type: String
+
+Resources:
+
+##### Basic Infrastructure #####
+
+    VPC:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/infrastructure/vpc.yaml
+            Parameters:
+                EnvironmentName:    !Ref AWS::StackName
+                VpcCIDR:            10.180.0.0/16
+                PublicSubnet1CIDR:  10.180.8.0/21
+                PublicSubnet2CIDR:  10.180.16.0/21
+                PrivateSubnet1CIDR: 10.180.24.0/21
+                PrivateSubnet2CIDR: 10.180.32.0/21
+
+    SecurityGroups:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/infrastructure/security-groups.yaml
+            Parameters:
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+
+    ALB:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/infrastructure/load-balancers.yaml
+            Parameters:
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+                Subnets: !GetAtt VPC.Outputs.PublicSubnets
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
+                PublicAlbAcmCertificate: arn:aws:acm:us-west-2:845828040396:certificate/ca1d5fc4-f21a-4305-a656-8ac91cd527bc
+
+    ECS:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/infrastructure/ecs-cluster.yaml
+            Parameters:
+                EnvironmentName: !Ref AWS::StackName
+                KeyPairName: !Ref KeyPairName
+                InstanceType: t2.large
+                ClusterSize: 2
+                VPC: !GetAtt VPC.Outputs.VPC
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+
+##### EC2 instances #####
+
+    BastionHost:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/infrastructure/ec2-instance.yaml
+            Parameters:
+                EnvironmentName: !Ref AWS::StackName
+                VPC: !GetAtt VPC.Outputs.VPC
+                AvailabilityZone: us-west-2a
+                SecurityGroupId: !GetAtt SecurityGroups.Outputs.BastionHostSecurityGroup
+                ServerName: bastion
+                AmiName: bastion
+                KeyPairName: !Ref KeyPairName
+                InstanceType: t2.nano
+                Subnet: !GetAtt VPC.Outputs.PublicSubnet1
+
+##### Container Services #####
+
+## Fargate tasks
+
+    FargateBudget:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/budget-2017-api.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                ## THIS PROBABLY NEEDS ITS OWN SECURITY GROUP
+                # SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /budget*
+                ConfigBucket: hacko-budget-config
+                DeployTarget: integration
+                ProjSettingsDir: budget_proj
+
+
+# API Endpoint catalog
+
+    EndPoints:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+                Host: service.civicpdx.org
+                Path: /
+
+# Frontend Application services
+
+    Civic2017Service:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: 2017.civicpdx.org
+                Host2: civicpdx.org
+                Path: /*
+
+    Civic2018Service:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2018-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: civicplatform.org
+                Path: /*
+
+# 2018 API services
+
+    2018DR:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /disaster-resilience*
+
+    2018HA:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /housing-affordability*
+
+    2018LE:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/local-elections-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /local-elections*
+
+    2018ND:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/neighborhood-development-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /neighborhood-development*
+
+    2018TS:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
+           Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /transportation-systems*
+
+# 2017 API services
+
+    EmerreponseService:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/emergency-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ConfigBucket: hacko-emerresponse-config
+                DeployTarget: integration
+                ProjSettingsDir: emerresponseAPI
+                Host: service.civicpdx.org
+                Path: /emergency*
+
+    HomelessService:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/homeless-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ConfigBucket: hacko-homeless-config
+                DeployTarget: integration
+                ProjSettingsDir: homelessAPI
+                Host: service.civicpdx.org
+                Path: /homeless*
+
+    HousingService:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ConfigBucket: hacko-housing-config
+                DeployTarget: integration
+                ProjSettingsDir: housingAPI
+                Host: service.civicpdx.org
+                Path: /housing*
+
+    transportService:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transport-service/service.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ConfigBucket: hacko-transportation-config
+                DeployTarget: integration
+                ProjSettingsDir: transDjango
+                Host: service.civicpdx.org
+                Path: /transport*
+
+Outputs:
+
+# API Endpoint catalog URL
+
+    EndpointServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "" ]]
+
+# Frontend Application URLs
+
+    Civic2017ServiceUrl:
+        Description: The URL endpoint for the civic2017 service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2017" ]]
+
+    Civic2018ServiceUrl:
+        Description: The URL endpoint for the civic2018 service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+# 2018 URLs
+
+    2018DRServiceUrl:
+        Description: The URL endpoint for the 2018 disaster-resilience service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "disaster-resilience" ]]
+
+    2018HAServiceUrl:
+        Description: The URL endpoint for the 2018 housing-affordability service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing-affordability" ]]
+
+    2018LEServiceUrl:
+        Description: The URL endpoint for the 2018 local-elections service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "local-elections" ]]
+
+    2018NDServiceUrl:
+        Description: The URL endpoint for the 2018 neighborhood-development service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "neighborhood-development" ]]
+
+    2018TSServiceUrl:
+        Description: The URL endpoint for the 2018 transportation-systems service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transportation-systems" ]]
+
+# 2017 URLs
+
+    BudgetServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "budget" ]]
+
+    EmerresponeServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "emerresponse" ]]
+
+    HomelessServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "homeless" ]]
+
+    HousingServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "housing" ]]
+
+    transportServiceUrl:
+        Description: The URL endpoint for the homeless service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "transport" ]]
