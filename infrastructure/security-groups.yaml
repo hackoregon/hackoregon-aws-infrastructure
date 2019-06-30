@@ -3,8 +3,8 @@ Description: >
     We create them in a seperate nested template, so they can be referenced
     by all of the other nested templates.
 
-    Last Modified: 05 June 2018
-    By Ian Turner(iant18150@gmail.com)
+    Last Modified: 30 June 2019
+    By Ian Turner(iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
 
@@ -29,7 +29,7 @@ Resources:
           VpcId: !Ref VPC
           GroupDescription: Access to the bastion host that runs in the public subntet
           SecurityGroupIngress:
-              # Allow access from anywhere to our Bastion Host
+              # Allow access from anywhere to our Bastion Host via SSH
               - CidrIp: 0.0.0.0/0
                 IpProtocol: TCP
                 FromPort: 22
@@ -64,7 +64,6 @@ Resources:
             IpProtocol: -1
           - SourceSecurityGroupId: !Ref BastionHostSecurityGroup
             IpProtocol: -1
-
         Tags:
             - Key: Name
               Value: !Sub ${EnvironmentName}-DB-Hosts
@@ -96,44 +95,41 @@ Resources:
           VpcId: !Ref VPC
           GroupDescription: Access to the ECS tasks/containers that run on ECS (EXPERIMENTAL)
           SecurityGroupIngress:
-          # Testing to unblock everything, see if this is in fact the problem
-          # - IpProtocol : -1
-          #   CidrIp : 0.0.0.0/0
-
-          ## Intended to allow health check traffic to the containerized app
+          ## Appears to allow all traffic to the containerized app - health checks and external requests
           - IpProtocol: tcp
             FromPort: '8000'
             ToPort: '8000'
             CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '80'
-            ToPort: '80'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '443'
-            ToPort: '443'
-            CidrIp: 0.0.0.0/0
+          ## TODO: figure out what these are for, and if there's any reason to keep these part of the ECS Task SG
+          # - IpProtocol: tcp
+          #   FromPort: '80'
+          #   ToPort: '80'
+          #   CidrIp: 0.0.0.0/0
+          # - IpProtocol: tcp
+          #   FromPort: '443'
+          #   ToPort: '443'
+          #   CidrIp: 0.0.0.0/0
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-ECS-Hosts
 
 Outputs:
 
-    ECSHostSecurityGroup:
-        Description: A reference to the security group for ECS hosts
-        Value: !Ref ECSHostSecurityGroup
-
-    LoadBalancerSecurityGroup:
-        Description: A reference to the security group for load balancers
-        Value: !Ref LoadBalancerSecurityGroup
-
     BastionHostSecurityGroup:
         Description: A reference to the security group for load balancers
         Value: !Ref BastionHostSecurityGroup
 
+    ECSHostSecurityGroup:
+        Description: A reference to the security group for ECS hosts
+        Value: !Ref ECSHostSecurityGroup
+
     DBSecurityGroup:
         Description: A reference to the security group for load balancers
         Value: !Ref DBSecurityGroup
+
+    LoadBalancerSecurityGroup:
+        Description: A reference to the security group for load balancers
+        Value: !Ref LoadBalancerSecurityGroup
 
     ECSTaskSecurityGroup:
         Description: A reference to the security group for ECS hosts
