@@ -1,6 +1,6 @@
 Description: >
     ECS Service - HackOregon 2018 housing-affordability API
-    Last Modified: 15 July 2018
+    Last Modified: 30 June 2019
     By Ian Turner (iant18150@gmail.com), Mike Lonergan (mikethecanuck@gmail.com)
 
 Parameters:
@@ -98,7 +98,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 20
+            Priority: 32
             Conditions:
                 - Field: host-header
                   Values:
@@ -115,7 +115,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref ListenerTls
-            Priority: 21
+            Priority: 33
             Conditions:
                 - Field: host-header
                   Values:
