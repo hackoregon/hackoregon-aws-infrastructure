@@ -14,7 +14,7 @@ Description: >
     Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 17 July 2018
+    Last Modified: 30 June 2019
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -95,7 +95,7 @@ Resources:
 
 ##### Container Services #####
 
-## Fargate tasks
+## Fargate API tasks
 
     FargateBudget:
         Type: AWS::CloudFormation::Stack
@@ -116,6 +116,24 @@ Resources:
                 DeployTarget: integration
                 ProjSettingsDir: budget_proj
 
+    2017Emergency:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-emergency-response-api.yaml
+            Parameters:
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /emergency*
+                ConfigBucket: hacko-emerresponse-config
+                DeployTarget: integration
+                ProjSettingsDir: emerresponseAPI
 
 # API Endpoint catalog
 
@@ -231,21 +249,37 @@ Resources:
 
 # 2017 API services
 
-    EmerreponseService:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/emergency-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ConfigBucket: hacko-emerresponse-config
-                DeployTarget: integration
-                ProjSettingsDir: emerresponseAPI
-                Host: service.civicpdx.org
-                Path: /emergency*
+    # BudgetService:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/budget-service/service.yaml
+    #         Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             ConfigBucket: hacko-budget-config
+    #             DeployTarget: integration
+    #             ProjSettingsDir: budget_proj
+    #             Host: service.civicpdx.org
+    #             Path: /budget*
+
+    # EmerreponseService:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/emergency-service/service.yaml
+    #         Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             ConfigBucket: hacko-emerresponse-config
+    #             DeployTarget: integration
+    #             ProjSettingsDir: emerresponseAPI
+    #             Host: service.civicpdx.org
+    #             Path: /emergency*
 
     HomelessService:
         Type: AWS::CloudFormation::Stack
