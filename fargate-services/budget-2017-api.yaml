@@ -20,7 +20,6 @@ Parameters:
         Type: String
 
     Path: 
-        # Default: /budget* # This _can_ be hard-coded here since it shouldn't vary by environment, but maybe that's just an inconsistent configuration strategy
         Description: The path to register with the Application Load Balancer
         Type: String
 
@@ -53,12 +52,10 @@ Parameters:
         Description: How much memory to give the ECS task in megabytes
         Type: Number
 
-## This is new compared to our EC2 templates
     SecurityGroup:
         Description: Select the Security Group to use for the ECS cluster hosts
         Type: AWS::EC2::SecurityGroup::Id
 
-## This is new compared to our EC2 templates
     Subnets:
         Description: Choose which subnets this ECS cluster should be deployed to
         Type: List<AWS::EC2::Subnet::Id>
@@ -167,7 +164,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 60
+            Priority: 50
             Conditions:
                 - Field: host-header
                   Values:
@@ -183,7 +180,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref ListenerTls
-            Priority: 61
+            Priority: 51
             Conditions:
                 - Field: host-header
                   Values:
