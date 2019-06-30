@@ -95,50 +95,6 @@ Resources:
 
 ##### Container Services #####
 
-## Fargate API tasks
-
-    2017Budget:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/budget-2017-api.yaml
-            Parameters:
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /budget*
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
-                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
-                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
-                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-                ConfigBucket: hacko-budget-config
-                DeployTarget: integration
-                ProjSettingsDir: budget_proj
-
-    2017Emergency:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-emergency-response-api.yaml
-            Parameters:
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /emergency*
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
-                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
-                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
-                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-                ConfigBucket: hacko-emerresponse-config
-                DeployTarget: integration
-                ProjSettingsDir: emerresponseAPI
-
 # API Endpoint catalog
 
     EndPoints:
@@ -184,7 +140,11 @@ Resources:
                 Host: civicplatform.org
                 Path: /*
 
-# 2018 API services
+# 2018 API services - Fargate
+
+
+
+# 2018 API services - EC2-based
 
     2018DR:
        Type: AWS::CloudFormation::Stack
@@ -251,7 +211,51 @@ Resources:
                 Host: service.civicpdx.org
                 Path: /transportation-systems*
 
-# 2017 API services
+# 2017 API services - Fargate
+
+    2017Budget:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-budget-api.yaml
+            Parameters:
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /budget*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                ConfigBucket: hacko-budget-config
+                DeployTarget: integration
+                ProjSettingsDir: budget_proj
+
+    2017Emergency:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-emergency-response-api.yaml
+            Parameters:
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                Host: service.civicpdx.org
+                Path: /emergency*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                ConfigBucket: hacko-emerresponse-config
+                DeployTarget: integration
+                ProjSettingsDir: emerresponseAPI
+
+# 2017 API services - EC2-based
 
     # BudgetService:
     #     Type: AWS::CloudFormation::Stack
