@@ -261,38 +261,6 @@ Resources:
 
 # 2017 API services - EC2-based
 
-    # BudgetService:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/budget-service/service.yaml
-    #         Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             ConfigBucket: hacko-budget-config
-    #             DeployTarget: integration
-    #             ProjSettingsDir: budget_proj
-    #             Host: service.civicpdx.org
-    #             Path: /budget*
-
-    # EmerreponseService:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/emergency-service/service.yaml
-    #         Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             ConfigBucket: hacko-emerresponse-config
-    #             DeployTarget: integration
-    #             ProjSettingsDir: emerresponseAPI
-    #             Host: service.civicpdx.org
-    #             Path: /emergency*
-
     HomelessService:
         Type: AWS::CloudFormation::Stack
         Properties:
