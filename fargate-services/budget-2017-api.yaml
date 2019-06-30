@@ -155,7 +155,8 @@ Resources:
             Protocol: HTTP
             TargetType: ip
             Matcher: 
-                HttpCode: 200-299
+                # HttpCode: 200-299
+                HttpCode: 200-299,400 # Testing only to see what the logs can tell us
             HealthCheckIntervalSeconds: 10
             HealthCheckPath: /budget/
             HealthCheckProtocol: HTTP

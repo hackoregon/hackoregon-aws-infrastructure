@@ -97,19 +97,23 @@ Resources:
           VpcId: !Ref VPC
           GroupDescription: Access to the ECS tasks/containers that run on ECS (EXPERIMENTAL)
           SecurityGroupIngress:
+          # Testing to unblock everything, see if this is in fact the problem
+          - IpProtocol : -1
+            CidrIp : 0.0.0.0/0
+
           # Intended to allow health check traffic to the containerized app
-          - IpProtocol: tcp
-            FromPort: '8000'
-            ToPort: '8000'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '80'
-            ToPort: '80'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '443'
-            ToPort: '443'
-            CidrIp: 0.0.0.0/0
+          # - IpProtocol: tcp
+          #   FromPort: '8000'
+          #   ToPort: '8000'
+          #   CidrIp: 0.0.0.0/0
+          # - IpProtocol: tcp
+          #   FromPort: '80'
+          #   ToPort: '80'
+          #   CidrIp: 0.0.0.0/0
+          # - IpProtocol: tcp
+          #   FromPort: '443'
+          #   ToPort: '443'
+          #   CidrIp: 0.0.0.0/0
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-ECS-Hosts
