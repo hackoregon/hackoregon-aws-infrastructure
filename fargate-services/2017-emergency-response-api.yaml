@@ -116,7 +116,7 @@ Resources:
             ContainerDefinitions:
                 - Name: emergency-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service:latest
                   ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
                   # CPU and Memory reservations are set to 50% of the default values specified above
                   Cpu: 256
