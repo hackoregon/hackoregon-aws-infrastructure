@@ -23,7 +23,12 @@ The repository consists of a set of nested templates that deploy the following:
 
 #### Infrastructure-as-Code
 
-This template can be used repeatedly to create identical copies of the same stack (or to use as a foundation to start a new stack).
+This set of templates can be used to create near-identical copies of the same stack (or to use as a foundation to start a new stack).
+
+Master templates correspond to the following deployed clusters in Hack Oregon:
+1. `master.yaml` - the historical "hacko-integration" cluster that has been used as test/staging/production since Hack Oregon's 2017 project season.
+2. (Coming soon) `master-staging.yaml` - a dedicated staging environment for all 2017+ Hack Oregon projects.  Looser access to developers, deploys from `develop` branch or equivalent in each project, limited resources to keep costs down.
+3. (Coming soon) `master-production.yaml` - a dedicated production environment for all 2017+ Hack Oregon projects.  Restricted access to developers, only deploys from `master` branch in each project, production-grade resource allocation (greater number of load-balanced tasks, higher Cpu and Memory resource allocation).
 
 #### Updating and Rollback
 
@@ -56,8 +61,17 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 
 - from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
-- copy the URL for the `master.yaml` file from S3
+- copy the URL for the `master.yaml` (or other master-*.yaml template) file from S3
 - go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
+
+#### Security requirements
+
+The account of the AWS user who initially creates the stack requires many privileges in AWS, including:
+
+* IAM Role creation
+* IAM Policy creation
+
+Subsequent incremental Updates to an existing stack can sometimes be performed by AWS users with less privileges, depending on which stack objects are being created, updated or deleted.
 
 ### Customize the templates
 
