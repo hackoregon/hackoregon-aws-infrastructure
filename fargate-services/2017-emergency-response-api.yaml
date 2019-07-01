@@ -122,13 +122,6 @@ Resources:
                   Cpu: 256
                   Memory: 512
                   MemoryReservation: 512
-                  Environment:
-                    - Name: CONFIG_BUCKET
-                      Value: !Ref ConfigBucket
-                    - Name: DEPLOY_TARGET
-                      Value: !Ref DeployTarget
-                    - Name: PROJ_SETTINGS_DIR
-                      Value: !Ref ProjSettingsDir
                   PortMappings:
                     - ContainerPort: 8000
                   LogConfiguration:
