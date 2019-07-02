@@ -74,6 +74,8 @@ The account of the AWS user who initially creates the stack requires many privil
 
 Subsequent incremental Updates to an existing stack can sometimes be performed by AWS users with less privileges, depending on which stack objects are being created, updated or deleted.
 
+Note: if the user attempting to perform an update doesn't have adequate permissions, CloudFormation will automatically rollback a stack change. In practice this means that if you have a change to try, try it - worst case it won't work and the stack will be left as you found it - you can't generally derail the state of the world if you lack adequate permissions.
+
 ### Customize the templates
 
 1. [Fork](https://github.com/hackoregon/hackoregon-aws-infrastructure#fork-destination-box) this GitHub repository.
