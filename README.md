@@ -13,17 +13,23 @@ A Set of YAML templates for deploying the HackOregon infrastructure on [Amazon E
 
 The repository consists of a set of nested templates that deploy the following:
 
- - A tiered [VPC](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html) with public and private subnets, spanning an AWS region.
- - A highly available ECS cluster deployed across two [Availability Zones](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) in an [Auto Scaling](https://aws.amazon.com/autoscaling/) group.
- - A pair of [NAT gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html) (one in each zone) to handle outbound traffic.
- - A variety of microservice and web front-end containers deployed as [ECS services](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html).
- - An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic to the load-balanced container duplicates.
- - ALB path-based routes for each ECS service to route the inbound traffic to the correct service.
- - Centralized container logging with [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
+* A tiered [VPC](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html) with public and private subnets, spanning an AWS region.
+* A highly available ECS cluster deployed across two [Availability Zones](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) in an [Auto Scaling](https://aws.amazon.com/autoscaling/) group.
+* A pair of [NAT gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html) (one in each zone) to handle outbound traffic.
+* A variety of microservice and web front-end containers deployed as [ECS services](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html).
+* -* An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic to the load-balanced container duplicates.
+* -* ALB path-based routes for each ECS service to route the inbound traffic to the correct service.
+* -* Centralized container logging with [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
 
-#### Infrastructure-as-Code
+### Infrastructure-as-Code
 
-This template can be used repeatedly to create identical copies of the same stack (or to use as a foundation to start a new stack).
+This set of templates can be used to create near-identical copies of the same stack (or to use as a foundation to start a new stack).
+
+Master templates correspond to the following deployed clusters in Hack Oregon:
+
+1. `master.yaml` - the historical "hacko-integration" cluster that has been used as test/staging/production since Hack Oregon's 2017 project season.
+2. (Coming soon) `master-staging.yaml` - a dedicated staging environment for all 2017+ Hack Oregon projects.  Looser access to developers, deploys from `develop` branch or equivalent in each project, limited resources to keep costs down.
+3. (Coming soon) `master-production.yaml` - a dedicated production environment for all 2017+ Hack Oregon projects.  Restricted access to developers, only deploys from `master` branch in each project, production-grade resource allocation (greater number of load-balanced tasks, higher Cpu and Memory resource allocation).
 
 #### Updating and Rollback
 
@@ -55,9 +61,20 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 
 Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 
-- from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
-- copy the URL for the `master.yaml` file from S3
-- go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
+* from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
+* copy the URL for the `master.yaml` (or other master-*.yaml template) file from S3
+* go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
+
+#### Security requirements
+
+The account of the AWS user who initially creates the stack requires many privileges in AWS, including:
+
+* IAM Role creation
+* IAM Policy creation
+
+Subsequent incremental Updates to an existing stack can sometimes be performed by AWS users with less privileges, depending on which stack objects are being created, updated or deleted.
+
+Note: if the user attempting to perform an update doesn't have adequate permissions, CloudFormation will automatically rollback a stack change. In practice this means that if you have a change to try, try it - worst case it won't work and the stack will be left as you found it - you can't generally derail the state of the world if you lack adequate permissions.
 
 ### Customize the templates
 
@@ -92,7 +109,7 @@ This is specified in the [master.yaml](master.yaml) template.
 
 By default, [t2.large](https://aws.amazon.com/ec2/instance-types/) instances are used, but you can change this by modifying the following section:
 
-```
+```yaml
 ECS:
   Type: AWS::CloudFormation::Stack
     Properties:
@@ -134,7 +151,7 @@ This set of templates deploys the following network design:
 
 You can adjust the CIDR ranges used in this section of the [master.yaml](master.yaml) template:
 
-```
+```yaml
 VPC:
   Type: AWS::CloudFormation::Stack
     Properties:
@@ -154,7 +171,7 @@ ECS has the ability to perform rolling upgrades to your ECS services to minimize
 
 To update one of your services to a new version, adjust the `Image` parameter in the service template (in [services/*](services/) to point to the new version of your container image. For example, if `1.0.0` was currently deployed and you wanted to update to `1.1.0`, you could update it as follows:
 
-```
+```yaml
 TaskDefinition:
   Type: AWS::ECS::TaskDefinition
   Properties:
@@ -169,7 +186,7 @@ To adjust the rollout parameters (min/max number of tasks/containers to keep in 
 
 For example:
 
-```
+```yaml
 Service:
   Type: AWS::ECS::Service
     Properties:
