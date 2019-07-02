@@ -107,7 +107,7 @@ This is specified in the [master.yaml](master.yaml) template.
 
 By default, [t2.large](https://aws.amazon.com/ec2/instance-types/) instances are used, but you can change this by modifying the following section:
 
-``` AWS
+```yaml
 ECS:
   Type: AWS::CloudFormation::Stack
     Properties:
@@ -149,7 +149,7 @@ This set of templates deploys the following network design:
 
 You can adjust the CIDR ranges used in this section of the [master.yaml](master.yaml) template:
 
-``` AWS
+```yaml
 VPC:
   Type: AWS::CloudFormation::Stack
     Properties:
@@ -169,7 +169,7 @@ ECS has the ability to perform rolling upgrades to your ECS services to minimize
 
 To update one of your services to a new version, adjust the `Image` parameter in the service template (in [services/*](services/) to point to the new version of your container image. For example, if `1.0.0` was currently deployed and you wanted to update to `1.1.0`, you could update it as follows:
 
-``` AWS
+```yaml
 TaskDefinition:
   Type: AWS::ECS::TaskDefinition
   Properties:
@@ -184,7 +184,7 @@ To adjust the rollout parameters (min/max number of tasks/containers to keep in 
 
 For example:
 
-``` AWS
+```yaml
 Service:
   Type: AWS::ECS::Service
     Properties:
