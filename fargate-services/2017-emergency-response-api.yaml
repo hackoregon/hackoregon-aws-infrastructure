@@ -144,9 +144,8 @@ Resources:
             Port: 80
             Protocol: HTTP
             TargetType: ip
-            Matcher:
-                # HttpCode: 200-299
-                HttpCode: 200-299,400 # Civic Devops issue #245
+            Matcher: 
+                HttpCode: 200-299
             HealthCheckIntervalSeconds: 10
             HealthCheckPath: /emergency/
             HealthCheckProtocol: HTTP
