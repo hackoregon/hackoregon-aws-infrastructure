@@ -55,7 +55,7 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 
 Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 
-- from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
+- from the root of your copy of the repo, run `aws s3 sync . s3://hacko-infrastructure-cfn --exclude ".git/*"`
 - copy the URL for the `master.yaml` file from S3
 - go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
 
@@ -70,11 +70,15 @@ Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 ### Create a new service
 
 1. Push your container to a registry somewhere (e.g., [Docker Hub](https://hub.docker.com/), [Amazon ECR](https://aws.amazon.com/ecr/)).
-2. Copy one of the existing service templates in [services/*](/services).
+2. Copy one of the existing service templates in [services/*](/services) or [fargate-services](/fargate-services).
 3. Update the `ContainerName` and `Image` parameters to point to your container image instead of the example container.
 4. Increment the `ListenerRule` priority number (no two services can have the same priority number - this is used to order the ALB path based routing rules).
 5. Duplicate one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed.
-6. Deploy the templates as a new stack, or as an update to an existing stack.
+6. Deploy the templates as a new stack, or as an update to an existing stack:
+    * First you'll need to create an ECR repository where the container image will (eventually) be published - these are currently just published by hand
+    * Next you'll need to create the new ECS Service - but you probably won't have a container image in ECR yet, so you won't be able to deploy an actual container just the Service and Task - so you need to set `DesiredCount` for this new service temporarily to **0**.
+    * Next you can use the deployment pipeline that uses the `ecs-deploy.sh` script [https://github.com/hackoregon/deploy-scripts/blob/master/bin/ecs-deploy.sh](here) to upload a container image to the new ECR repo
+    * Finally you can change the `DesiredCount` on the new service back to your target non-zero value and update the stack
 
 ### Setup centralized container logging
 
