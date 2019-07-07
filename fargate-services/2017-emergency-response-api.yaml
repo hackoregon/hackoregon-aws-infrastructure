@@ -3,7 +3,7 @@
 
 Description: >
     ECS Service - HackOregon 2017 Emergency Response API
-Parameters: 
+Parameters:
 
 ## ALB configuration parameters
 
@@ -19,7 +19,7 @@ Parameters:
         Description: The host path to register with the Application Load Balancer
         Type: String
 
-    Path: 
+    Path:
         Description: The path to register with the Application Load Balancer
         Type: String
 
@@ -33,7 +33,7 @@ Parameters:
         Description: Please provide the ECS Cluster ID that this service should run on
         Type: String
 
-    DesiredCount: 
+    DesiredCount:
         Default: 2
         Description: How many instances of this task should we run across our cluster?
         Type: Number
@@ -78,10 +78,10 @@ Parameters:
 Resources:
 
 ## This service definition introduces NetworkConfiguration and lacks PlacementStrategies and Role
-    Service: 
+    Service:
         Type: AWS::ECS::Service
         DependsOn: ListenerRule
-        Properties: 
+        Properties:
             Cluster: !Ref Cluster
             DeploymentConfiguration:
                 MaximumPercent: 200
@@ -97,7 +97,7 @@ Resources:
                       - !Select [ 0, !Ref Subnets ]
                       - !Select [ 1, !Ref Subnets ]
             TaskDefinition: !Ref TaskDefinition
-            LoadBalancers: 
+            LoadBalancers:
                 - ContainerName: "emergency-service"
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
@@ -116,19 +116,12 @@ Resources:
             ContainerDefinitions:
                 - Name: emergency-service
                   Essential: true
-                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service
+                  Image: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service:latest
                   ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
                   # CPU and Memory reservations are set to 50% of the default values specified above
                   Cpu: 256
                   Memory: 512
                   MemoryReservation: 512
-                  Environment:
-                    - Name: CONFIG_BUCKET
-                      Value: !Ref ConfigBucket
-                    - Name: DEPLOY_TARGET
-                      Value: !Ref DeployTarget
-                    - Name: PROJ_SETTINGS_DIR
-                      Value: !Ref ProjSettingsDir
                   PortMappings:
                     - ContainerPort: 8000
                   LogConfiguration:
@@ -140,9 +133,9 @@ Resources:
 
     CloudWatchLogsGroup:
         Type: AWS::Logs::LogGroup
-        Properties: 
+        Properties:
             LogGroupName: !Ref AWS::StackName
-            RetentionInDays: 365  
+            RetentionInDays: 365
 
     TargetGroup:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -152,8 +145,7 @@ Resources:
             Protocol: HTTP
             TargetType: ip
             Matcher: 
-                # HttpCode: 200-299
-                HttpCode: 200-299,400 # Civic Devops issue #245
+                HttpCode: 200-299
             HealthCheckIntervalSeconds: 10
             HealthCheckPath: /emergency/
             HealthCheckProtocol: HTTP
@@ -170,7 +162,7 @@ Resources:
                   Values:
                     - !Ref Host
                 - Field: path-pattern
-                  Values: 
+                  Values:
                     - !Ref Path
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
@@ -197,8 +189,8 @@ Resources:
     # This IAM Role grants the Fargate-based service access to register/unregister with the
     # Application Load Balancer (ALB). It is based on the default documented here:
     # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/service_IAM_role.html
-    # 
-    # It also has the side-effect of allowing other parts of the stack to attach other IAM policies 
+    #
+    # It also has the side-effect of allowing other parts of the stack to attach other IAM policies
     # such as allowing SSM access.
     TaskRole:
         Type: AWS::IAM::Role
@@ -235,7 +227,7 @@ Resources:
                         }]
                     }
                 - PolicyName: ssm-access
-                  PolicyDocument: 
+                  PolicyDocument:
                     {
                         "Version": "2012-10-17",
                         "Statement": [
@@ -253,6 +245,8 @@ Resources:
                                     "ssm:GetParameters"
                                 ],
                                 "Resource": [
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2017/*",
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/production/2017/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2018/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/production/2018/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2019/*",
