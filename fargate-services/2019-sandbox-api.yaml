@@ -34,7 +34,7 @@ Parameters:
         Type: String
 
     DesiredCount: 
-        Default: 2
+        Default: 0
         Description: How many instances of this task should we run across our cluster?
         Type: Number
 
@@ -65,7 +65,8 @@ Parameters:
         Description: the container image to be deployed from ECR (Elastic Container Registry)
         ## EXPERIMENTAL - based on https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecr-repository.html
         ## Might want to just pass in a String instead of strongly-typing this parameter
-        Type: AWS::ECR::Repository
+        # Type: AWS::ECR::Repository
+        Type: String
 
 Resources:
 

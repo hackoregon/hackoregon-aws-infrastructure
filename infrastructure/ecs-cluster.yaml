@@ -192,6 +192,7 @@ Resources:
                                     "ssm:GetParameters"
                                 ],
                                 "Resource": [
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/production/2017/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2018/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/production/2018/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2019/*",
