@@ -123,6 +123,9 @@ Resources:
                         awslogs-group: !Ref AWS::StackName
                         awslogs-region: !Ref AWS::Region
                         awslogs-stream-prefix: !Ref AWS::StackName
+                  Environment:
+                    - Name: DEBUG
+                      Value: true
                 #   Secrets:
                 #     - Name: DEBUG
                 #       ValueFrom: arn:aws:ssm:us-west-2:845828040396:parameter/staging/2019-sandbox/DEBUG
