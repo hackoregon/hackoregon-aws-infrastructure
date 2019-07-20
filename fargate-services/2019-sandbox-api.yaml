@@ -123,6 +123,9 @@ Resources:
                         awslogs-group: !Ref AWS::StackName
                         awslogs-region: !Ref AWS::Region
                         awslogs-stream-prefix: !Ref AWS::StackName
+                #   Secrets:
+                #     - Name: DEBUG
+                #       ValueFrom: arn:aws:ssm:us-west-2:845828040396:parameter/staging/2019-sandbox/DEBUG
 
     CloudWatchLogsGroup:
         Type: AWS::Logs::LogGroup
@@ -141,7 +144,7 @@ Resources:
                 # HttpCode: 200-299
                 HttpCode: 200-299,400 # Civic Devops issue #245
             HealthCheckIntervalSeconds: 10
-            HealthCheckPath: /sandbox/
+            HealthCheckPath: /sandbox/schema/
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2
@@ -241,7 +244,7 @@ Resources:
                                 "Resource": [
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2018/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/production/2018/*",
-                                    "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2019/*",
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/staging/*",
                                     "arn:aws:ssm:us-west-2:845828040396:parameter/production/2019/*"
                                 ]
                             },

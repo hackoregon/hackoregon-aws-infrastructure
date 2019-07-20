@@ -14,7 +14,7 @@ Description: >
     Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 30 June 2019
+    Last Modified: 14 July 2019
     Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
 
 Parameters:
@@ -153,7 +153,7 @@ Resources:
                 Path: /sandbox*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 0
+                DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
