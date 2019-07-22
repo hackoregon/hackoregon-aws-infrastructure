@@ -27,11 +27,11 @@ Parameters:
 
     ListenerRulePriority:
         Description: Load Balancer priority for the base listener
-        Type: String
+        Type: Number
 
     ListenerRuleTlsPriority:
         Description: Load Balancer priority for the TLS listener
-        Type: String
+        Type: Number
 
     Host:
         Description: The host path to register with the Application Load Balancer
@@ -72,6 +72,10 @@ Parameters:
     TaskMemory:
         Default: 1024
         Description: How much memory to give the ECS task in megabytes
+        Type: Number
+
+    ContainerPort:
+        Description: The TCP port on which the container app is listening
         Type: Number
 
     SecurityGroup:
@@ -121,8 +125,8 @@ Resources:
         Type: AWS::ECS::TaskDefinition
         Properties:
             Family: !Ref ProjectName
-            Cpu: !Ref 'TaskCpu'
-            Memory: !Ref 'TaskMemory'
+            Cpu: !Ref TaskCpu
+            Memory: !Ref TaskMemory
             NetworkMode: awsvpc
             RequiresCompatibilities:
               - FARGATE
@@ -132,13 +136,13 @@ Resources:
                 - Name: !Ref ProjectName
                   Essential: true
                   Image: !Ref EcrImage
-                  ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
+                  ## NOTE: this looks duplicative of the Cpu/Memory defined just a few lines above at the Task Definition level
                   # CPU and Memory reservations are set to 50% of the default values specified above
                   Cpu: 256
                   Memory: 512
                   MemoryReservation: 512
                   PortMappings:
-                    - ContainerPort: 8000
+                    - ContainerPort: !Ref ContainerPort
                   LogConfiguration:
                     LogDriver: awslogs
                     Options:
