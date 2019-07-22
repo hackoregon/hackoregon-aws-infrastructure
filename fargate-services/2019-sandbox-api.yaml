@@ -5,10 +5,14 @@ Description: >
     ECS Service - HackOregon 2019 Sandbox API
 Parameters: 
 
-## Project-wide configuration parameters
+## Miscellaneous configuration parameters
 
     ProjectName:
         Description: The canonical name of the project, used in many places in this script
+        Type: String
+
+    DeploymentSsmNamespace:
+        Description: The namespace prefix in which the service's SSM parameters are found
         Type: String
 
 ## ALB configuration parameters
@@ -19,6 +23,14 @@ Parameters:
 
     ListenerTls:
         Description: The 443 Application Load Balancer listener to register with
+        Type: String
+
+    ListenerRulePriority:
+        Description: Load Balancer priority for the base listener
+        Type: String
+
+    ListenerRuleTlsPriority:
+        Description: Load Balancer priority for the TLS listener
         Type: String
 
     Host:
