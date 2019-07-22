@@ -148,6 +148,7 @@ Resources:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-sandbox-api.yaml
             Parameters:
                 ProjectName: 2019-sandbox
+                DeploymentSsmNamespace: /staging
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: service.civicpdx.org
