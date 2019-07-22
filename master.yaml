@@ -152,6 +152,8 @@ Resources:
                 HealthCheckPathName: /sandbox/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 26
+                ListenerRuleTlsPriority: 27
                 Host: service.civicpdx.org
                 Path: /sandbox*
                 VPC: !GetAtt VPC.Outputs.VPC
