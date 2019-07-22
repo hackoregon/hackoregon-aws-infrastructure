@@ -5,6 +5,12 @@ Description: >
     ECS Service - HackOregon 2019 Sandbox API
 Parameters: 
 
+## Project-wide configuration parameters
+
+    ProjectName:
+        Description: The canonical name of the project, used in many places in this script
+        Type: String
+
 ## ALB configuration parameters
 
     Listener:
@@ -91,14 +97,14 @@ Resources:
                       - !Select [ 1, !Ref Subnets ]
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers: 
-                - ContainerName: "2019-sandbox"
+                - ContainerName: !Ref ProjectName
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
-            Family: 2019-sandbox
+            Family: !Ref ProjectName
             Cpu: !Ref 'TaskCpu'
             Memory: !Ref 'TaskMemory'
             NetworkMode: awsvpc
@@ -107,7 +113,7 @@ Resources:
             ExecutionRoleArn: !Ref ECSTaskExecutionRole
             TaskRoleArn: !Ref TaskRole
             ContainerDefinitions:
-                - Name: 2019-sandbox
+                - Name: !Ref ProjectName
                   Essential: true
                   Image: !Ref EcrImage
                   ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
@@ -129,7 +135,7 @@ Resources:
                     - Name: DOCKER_REPO_NAMESPACE # TODO: this doesn't make sense as the name of the variable - it should be "SSM_PREFIX"
                       Value: /staging
                     - Name: PROJECT_NAME
-                      Value: 2019-sandbox
+                      Value: !Ref ProjectName
                 #     - Name: DEBUG
                 #       Value: false
                 #   Secrets:
