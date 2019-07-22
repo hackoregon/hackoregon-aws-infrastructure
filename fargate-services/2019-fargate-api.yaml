@@ -2,7 +2,7 @@
 ### https://github.com/pjlewisuk/fargate-refarch-cloudformation
 
 Description: >
-    ECS Service - HackOregon 2019 Sandbox API
+    ECS Service definition for all HackOregon 2019 APIs
 Parameters: 
 
 ## Miscellaneous configuration parameters
