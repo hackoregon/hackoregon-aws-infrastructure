@@ -29,6 +29,10 @@ Parameters:
         Description: The path to register with the Application Load Balancer
         Type: String
 
+    HealthCheckPathName:
+        Description: The path for ALB to check the health of the container
+        Type: String
+
 ## ECS configuration parameters
 
     VPC:
@@ -159,7 +163,7 @@ Resources:
                 # HttpCode: 200-299
                 HttpCode: 200-299,400,404 # Civic Devops issue #245
             HealthCheckIntervalSeconds: 10
-            HealthCheckPath: /sandbox/schema/
+            HealthCheckPath: !Ref HealthCheckPathName
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2

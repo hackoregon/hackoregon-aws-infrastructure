@@ -149,6 +149,7 @@ Resources:
             Parameters:
                 ProjectName: 2019-sandbox
                 DeploymentSsmNamespace: /staging
+                HealthCheckPathName: /sandbox/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: service.civicpdx.org
