@@ -118,7 +118,7 @@ Resources:
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers: 
                 - ContainerName: !Ref ProjectName
-                  ContainerPort: 8000
+                  ContainerPort: !Ref ContainerPort
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
@@ -179,7 +179,7 @@ Resources:
                 # HttpCode: 200-299
                 HttpCode: 200-299,400,404 # Civic Devops issue #245
             HealthCheckIntervalSeconds: 10
-            HealthCheckPath: !Ref HealthCheckPathName
+            HealthCheckPath: !Ref HealthCheckPath
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2
