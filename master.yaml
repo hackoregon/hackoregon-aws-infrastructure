@@ -149,7 +149,7 @@ Resources:
             Parameters:
                 ProjectName: 2019-sandbox
                 DeploymentSsmNamespace: /staging
-                HealthCheckPath: /sandbox/schema/
+                HealthCheckPathName: /sandbox/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ListenerRulePriority: 26

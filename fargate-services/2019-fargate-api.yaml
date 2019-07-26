@@ -179,7 +179,7 @@ Resources:
                 # HttpCode: 200-299
                 HttpCode: 200-299,400,404 # Civic Devops issue #245
             HealthCheckIntervalSeconds: 10
-            HealthCheckPath: !Ref HealthCheckPath
+            HealthCheckPath: !Ref HealthCheckPathName
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2
