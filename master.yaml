@@ -277,8 +277,8 @@ Resources:
                 HealthCheckPathName: /transportation2019/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ListenerRulePriority: 24
-                ListenerRuleTlsPriority: 25
+                ListenerRulePriority: 28
+                ListenerRuleTlsPriority: 29
                 Host: service.civicpdx.org
                 Path: /transportation2019*
                 VPC: !GetAtt VPC.Outputs.VPC
