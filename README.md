@@ -17,9 +17,9 @@ The repository consists of a set of nested templates that deploy the following:
 * A highly available ECS cluster deployed across two [Availability Zones](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) in an [Auto Scaling](https://aws.amazon.com/autoscaling/) group.
 * A pair of [NAT gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html) (one in each zone) to handle outbound traffic.
 * A variety of microservice and web front-end containers deployed as [ECS services](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html).
-* -* An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic to the load-balanced container duplicates.
-* -* ALB path-based routes for each ECS service to route the inbound traffic to the correct service.
-* -* Centralized container logging with [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
+* An [Application Load Balancer (ALB)](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) to the public subnets to handle inbound traffic to the load-balanced container duplicates.
+* ALB path-based routes for each ECS service to route the inbound traffic to the correct service.
+* Centralized container logging with [Amazon CloudWatch Logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
 
 ### Infrastructure-as-Code
 
@@ -31,7 +31,7 @@ Master templates correspond to the following deployed clusters in Hack Oregon:
 2. (Coming soon) `master-staging.yaml` - a dedicated staging environment for all 2017+ Hack Oregon projects.  Looser access to developers, deploys from `develop` branch or equivalent in each project, limited resources to keep costs down.
 3. (Coming soon) `master-production.yaml` - a dedicated production environment for all 2017+ Hack Oregon projects.  Restricted access to developers, only deploys from `master` branch in each project, production-grade resource allocation (greater number of load-balanced tasks, higher Cpu and Memory resource allocation).
 
-#### Updating and Rollback
+### Updating and Rollback
 
 This CloudFormation stack not only handles the initial deployment of the HackOregon infrastructure and environments, but it can also manage the whole lifecycle, including future updates. During updates, you have fine-grained control and visibility over how changes are applied, using functionality such as [change sets](https://aws.amazon.com/blogs/aws/new-change-sets-for-aws-cloudformation/), [rolling update policies](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatepolicy.html) and [stack policies](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html).
 
@@ -61,8 +61,8 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 
 Stack is setup to launch stack in the us-west-2 (Oregon) region in your account:
 
-* from the root of your copy of the repo, run `aws s3 cp . s3://hacko-infrastructure-cfn --recursive --exclude ".git/*"`
-* copy the URL for the `master.yaml` (or other master-*.yaml template) file from S3
+* from the root of your copy of the repo, run `aws s3 sync . s3://hacko-infrastructure-cfn --exclude ".git/*"`
+* copy the URL for the `master.yaml` file from S3
 * go to AWS CloudFormation - if creating new stack (e.g. for testing), choose "create stack"; if updating an existing stack, select that stack then click the *Update* button
 
 #### Security requirements
@@ -87,11 +87,15 @@ Note: if the user attempting to perform an update doesn't have adequate permissi
 ### Create a new service
 
 1. Push your container to a registry somewhere (e.g., [Docker Hub](https://hub.docker.com/), [Amazon ECR](https://aws.amazon.com/ecr/)).
-2. Copy one of the existing service templates in [services/*](/services).
+2. Copy one of the existing service templates in [services/*](/services) or [fargate-services](/fargate-services).
 3. Update the `ContainerName` and `Image` parameters to point to your container image instead of the example container.
 4. Increment the `ListenerRule` priority number (no two services can have the same priority number - this is used to order the ALB path based routing rules).
 5. Duplicate one of the existing service definitions in [master.yaml](master.yaml) and point it at your new service template. Specify the HTTP `Path` at which you want the service exposed.
-6. Deploy the templates as a new stack, or as an update to an existing stack.
+6. Deploy the templates as a new stack, or as an update to an existing stack:
+    * First you'll need to create an ECR repository where the container image will (eventually) be published - these are currently just published by hand
+    * Next you'll need to create the new ECS Service - but you probably won't have a container image in ECR yet, so you won't be able to deploy an actual container just the Service and Task - so you need to set `DesiredCount` for this new service temporarily to **0**.
+    * Next you can use the deployment pipeline that uses the `ecs-deploy.sh` script [https://github.com/hackoregon/deploy-scripts/blob/master/bin/ecs-deploy.sh](here) to upload a container image to the new ECR repo
+    * Finally you can change the `DesiredCount` on the new service back to your target non-zero value and update the stack
 
 ### Setup centralized container logging
 
