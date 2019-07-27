@@ -158,7 +158,7 @@ Resources:
                 Path: /exemplar*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
+                DesiredCount: 0
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
