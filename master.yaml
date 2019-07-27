@@ -142,6 +142,81 @@ Resources:
 
 # 2019 API services - Fargate
 
+    2019Exemplar:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: 2019-exemplar
+                DeploymentSsmNamespace: /staging
+                HealthCheckPathName: /exemplar/schema/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 77
+                ListenerRuleTlsPriority: 78
+                Host: service.civicpdx.org
+                Path: /exemplar*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 0
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-exemplar:latest
+
+    2019Disaster:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: 2019-disaster
+                DeploymentSsmNamespace: /staging
+                HealthCheckPathName: /disaster/schema/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 20
+                ListenerRuleTlsPriority: 21
+                Host: service.civicpdx.org
+                Path: /disaster2019*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 0
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-disaster:latest
+
+    2019Education:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: 2019-education
+                DeploymentSsmNamespace: /staging
+                HealthCheckPathName: /education/schema/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 22
+                ListenerRuleTlsPriority: 23
+                Host: service.civicpdx.org
+                Path: /education2019*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 0
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-education:latest
+
     2019Housing:
         Type: AWS::CloudFormation::Stack
         Properties:
@@ -183,7 +258,7 @@ Resources:
                 Path: /sandbox*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 0
+                DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
@@ -191,6 +266,31 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-sandbox:latest
+
+    2019Transportation:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: 2019-transportation
+                DeploymentSsmNamespace: /staging
+                HealthCheckPathName: /transportation2019/schema/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 24
+                ListenerRuleTlsPriority: 25
+                Host: service.civicpdx.org
+                Path: /transportation2019*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 0
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 512
+                TaskMemory: 1024
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-transportation:latest
 
 # 2018 API services - Fargate
 
