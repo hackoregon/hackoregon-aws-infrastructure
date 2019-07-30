@@ -368,10 +368,15 @@ Resources:
     2017Budget:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-budget-api.yaml
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-fargate-api.yaml
             Parameters:
+                ProjectName: budget-service
+                DeploymentSsmNamespace: /production/2017/API
+                HealthCheckPathName: /budget/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 50
+                ListenerRuleTlsPriority: 51
                 Host: service.civicpdx.org
                 Path: /budget*
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -380,8 +385,10 @@ Resources:
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
+                ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/budget-service:latest
                 ConfigBucket: hacko-budget-config
                 DeployTarget: integration
                 ProjSettingsDir: budget_proj
@@ -389,10 +396,15 @@ Resources:
     2017Emergency:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-emergency-response-api.yaml
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-fargate-api.yaml
             Parameters:
+                ProjectName: emergency-service
+                DeploymentSsmNamespace: /integration
+                HealthCheckPathName: /emergency/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 52
+                ListenerRuleTlsPriority: 53 
                 Host: service.civicpdx.org
                 Path: /emergency*
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -401,8 +413,10 @@ Resources:
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
+                ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/integration/emergency-service:latest
                 ConfigBucket: hacko-emerresponse-config
                 DeployTarget: integration
                 ProjSettingsDir: emerresponseAPI

@@ -1,0 +1,309 @@
+### This template is based on the reference architecture developed or documented by Paul Lewis of AWS
+### https://github.com/pjlewisuk/fargate-refarch-cloudformation
+
+Description: >
+    ECS Service definition for HackOregon 2017 APIs
+Parameters:
+
+## Miscellaneous configuration parameters
+
+    ProjectName:
+        Description: The canonical name of the project, used in many places in this script
+        Type: String
+
+    DeploymentSsmNamespace:
+        Description: The namespace prefix in which the service's SSM parameters are found
+        Type: String
+
+## ALB configuration parameters
+
+    Listener:
+        Description: The Application Load Balancer listener to register with
+        Type: String
+
+    ListenerTls:
+        Description: The 443 Application Load Balancer listener to register with
+        Type: String
+
+    ListenerRulePriority:
+        Description: Load Balancer priority for the base listener
+        Type: Number
+
+    ListenerRuleTlsPriority:
+        Description: Load Balancer priority for the TLS listener
+        Type: Number
+
+    Host:
+        Description: The host path to register with the Application Load Balancer
+        Type: String
+
+    Path:
+        Description: The path to register with the Application Load Balancer
+        Type: String
+
+    HealthCheckPathName:
+        Description: The path for ALB to check the health of the container
+        Type: String
+
+## ECS configuration parameters
+
+    VPC:
+        Description: The VPC that the ECS cluster is deployed to
+        Type: AWS::EC2::VPC::Id
+
+    Cluster:
+        Description: Please provide the ECS Cluster ID that this service should run on
+        Type: String
+
+    DesiredCount:
+        Default: 2
+        Description: How many instances of this task should we run across our cluster?
+        Type: Number
+
+    ECSTaskExecutionRole:
+        Description: The ECS Task Execution Role
+        Type: String
+
+    TaskCpu:
+        Default: 512
+        Description: How much CPU to give the ECS task, in CPU units (where 1,024 units is 1 CPU) or vCPUs
+        Type: Number
+
+    TaskMemory:
+        Default: 1024
+        Description: How much memory to give the ECS task in megabytes
+        Type: Number
+
+    ContainerPort:
+        Description: The TCP port on which the container app is listening
+        Type: Number
+
+    SecurityGroup:
+        Description: Select the Security Group to use for the ECS cluster hosts
+        Type: AWS::EC2::SecurityGroup::Id
+
+    Subnets:
+        Description: Choose which subnets this ECS cluster should be deployed to
+        Type: List<AWS::EC2::Subnet::Id>
+    # Use !Select to choose 0 and 1 from subnet array, e.g. !Select [ 0, !Ref Subnets ]
+
+    EcrImage:
+        Description: the container image to be deployed from ECR (Elastic Container Registry)
+        ## TODO: strongly type this parameter - AWS::ECR::Repository didn't work the first time we tried
+        Type: String
+
+# Container-specific configuration
+
+    ConfigBucket:
+        Description: The configuration bucket we want to use
+        Type: String
+
+    DeployTarget:
+        Description: Which environment (Valid Values - integration, production)
+        Type: String
+
+    ProjSettingsDir:
+        Description: the relative directory path where we keep the app config
+        Type: String
+
+Resources:
+
+## This service definition introduces NetworkConfiguration and lacks PlacementStrategies and Role
+    Service:
+        Type: AWS::ECS::Service
+        DependsOn: ListenerRule
+        Properties:
+            Cluster: !Ref Cluster
+            DeploymentConfiguration:
+                MaximumPercent: 200
+                MinimumHealthyPercent: 100
+            DesiredCount: !Ref DesiredCount
+            LaunchType: FARGATE
+            NetworkConfiguration:
+                AwsvpcConfiguration:
+                    AssignPublicIp: ENABLED
+                    SecurityGroups:
+                      - !Ref SecurityGroup
+                    Subnets:
+                      - !Select [ 0, !Ref Subnets ]
+                      - !Select [ 1, !Ref Subnets ]
+            TaskDefinition: !Ref TaskDefinition
+            LoadBalancers:
+                - ContainerName: !Ref ProjectName
+                  ContainerPort: !Ref ContainerPort
+                  TargetGroupArn: !Ref TargetGroup
+
+    TaskDefinition:
+        Type: AWS::ECS::TaskDefinition
+        Properties:
+            Family: !Ref ProjectName
+            Cpu: !Ref TaskCpu
+            Memory: !Ref TaskMemory
+            NetworkMode: awsvpc
+            RequiresCompatibilities:
+              - FARGATE
+            ExecutionRoleArn: !Ref ECSTaskExecutionRole
+            TaskRoleArn: !Ref TaskRole
+            ContainerDefinitions:
+                - Name: !Ref ProjectName
+                  Essential: true
+                  Image: !Ref EcrImage
+                  ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
+                  # CPU and Memory reservations are set to 50% of the default values specified above
+                  Cpu: 256
+                  Memory: 512
+                  MemoryReservation: 512
+                  Environment:
+                    # 2019-era SSM configuration download architecture
+                    - Name: AWS_DEFAULT_REGION
+                      Value: !Ref AWS::Region
+                    - Name: DOCKER_REPO_NAMESPACE # TODO: this doesn't make sense as the name of the variable - it should be "SSM_PREFIX"
+                      Value: !Ref DeploymentSsmNamespace
+                    - Name: PROJECT_NAME
+                      Value: !Ref ProjectName
+                    # 2017-era S3 configuration download architecture
+                    - Name: CONFIG_BUCKET
+                      Value: !Ref ConfigBucket
+                    - Name: DEPLOY_TARGET
+                      Value: !Ref DeployTarget
+                    - Name: PROJ_SETTINGS_DIR
+                      Value: !Ref ProjSettingsDir
+                  PortMappings:
+                    - ContainerPort: !Ref ContainerPort
+                  LogConfiguration:
+                    LogDriver: awslogs
+                    Options:
+                        awslogs-group: !Ref AWS::StackName
+                        awslogs-region: !Ref AWS::Region
+                        awslogs-stream-prefix: !Ref AWS::StackName
+
+    CloudWatchLogsGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+            LogGroupName: !Ref AWS::StackName
+            RetentionInDays: 365
+
+    TargetGroup:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+            VpcId: !Ref VPC
+            Port: 80
+            Protocol: HTTP
+            TargetType: ip
+            Matcher:
+                HttpCode: 200-299
+            HealthCheckIntervalSeconds: 10
+            HealthCheckPath: !Ref HealthCheckPathName
+            HealthCheckProtocol: HTTP
+            HealthCheckTimeoutSeconds: 5
+            HealthyThresholdCount: 2
+
+    ListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref Listener
+            Priority: !Ref ListenerRulePriority
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRuleTls:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref ListenerTls
+            Priority: !Ref ListenerRuleTlsPriority
+            Conditions:
+                - Field: host-header
+                  Values:
+                    - !Ref Host
+                - Field: path-pattern
+                  Values:
+                    - !Ref Path
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ## TODO: extract this role to a global role for all Fargate tasks
+
+    # This IAM Role grants the Fargate-based service access to register/unregister with the
+    # Application Load Balancer (ALB). It is based on the default documented here:
+    # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/service_IAM_role.html
+    #
+    # It also has the side-effect of allowing other parts of the stack to attach other IAM policies
+    # such as allowing SSM access.
+    TaskRole:
+        Type: AWS::IAM::Role
+        Properties:
+            RoleName: !Sub ecs-service-${AWS::StackName}
+            Path: /
+            AssumeRolePolicyDocument: |
+                {
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": { "Service": [ "ecs-tasks.amazonaws.com" ]},
+                        "Action": [ "sts:AssumeRole" ]
+                    }]
+                }
+            Policies:
+                - PolicyName: !Sub ecs-service-${AWS::StackName}
+                  PolicyDocument:
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ec2:AuthorizeSecurityGroupIngress",
+                                    "ec2:Describe*",
+                                    "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                                    "elasticloadbalancing:Describe*",
+                                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                                    "elasticloadbalancing:DeregisterTargets",
+                                    "elasticloadbalancing:DescribeTargetGroups",
+                                    "elasticloadbalancing:DescribeTargetHealth",
+                                    "elasticloadbalancing:RegisterTargets"
+                                ],
+                                "Resource": "*"
+                        }]
+                    }
+                - PolicyName: ssm-access
+                  PolicyDocument:
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ssm:DescribeParameters"
+                                ],
+                                "Resource": "*"
+                            },
+                            {
+                                "Sid": "Stmt1482841904000",
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ssm:GetParameters"
+                                ],
+                                "Resource": [
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/staging/2017/*",
+                                    "arn:aws:ssm:us-west-2:845828040396:parameter/production/2017/*"
+                                ]
+                            },
+                            {
+                                "Sid": "Stmt1482841948000",
+                                "Effect": "Allow",
+                                "Action": [
+                                    "kms:Decrypt"
+                                ],
+                                "Resource": [
+                                    "arn:aws:kms:us-west-2:845828040396:key/0280a59b-d8f5-44e0-8b51-80aec2f27275"
+                                ]
+                            }
+                        ]
+                    }
