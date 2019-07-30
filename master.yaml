@@ -147,25 +147,25 @@ Resources:
         Properties:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
             Parameters:
-                ProjectName: 2019-exemplar
+                ProjectName: 2019-examplar
                 DeploymentSsmNamespace: /staging
-                HealthCheckPathName: /exemplar/schema/
+                HealthCheckPathName: /examplar/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ListenerRulePriority: 77
                 ListenerRuleTlsPriority: 78
                 Host: service.civicpdx.org
-                Path: /exemplar*
+                Path: /examplar*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 0
+                DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 512
                 TaskMemory: 1024
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/staging/2019-examplar:latest
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/testing/2019-examplar:latest
 
     2019Disaster:
         Type: AWS::CloudFormation::Stack
