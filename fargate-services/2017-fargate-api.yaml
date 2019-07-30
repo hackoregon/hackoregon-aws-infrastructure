@@ -154,6 +154,14 @@ Resources:
                   Memory: 512
                   MemoryReservation: 512
                   Environment:
+                    # 2019-era SSM configuration download architecture
+                    - Name: AWS_DEFAULT_REGION
+                      Value: !Ref AWS::Region
+                    - Name: DOCKER_REPO_NAMESPACE # TODO: this doesn't make sense as the name of the variable - it should be "SSM_PREFIX"
+                      Value: !Ref DeploymentSsmNamespace
+                    - Name: PROJECT_NAME
+                      Value: !Ref ProjectName
+                    # 2017-era S3 configuration download architecture
                     - Name: CONFIG_BUCKET
                       Value: !Ref ConfigBucket
                     - Name: DEPLOY_TARGET
