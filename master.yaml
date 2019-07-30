@@ -399,7 +399,7 @@ Resources:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2017-fargate-api.yaml
             Parameters:
                 ProjectName: emergency-service
-                DeploymentSsmNamespace: /integration
+                DeploymentSsmNamespace: /production/2017/API
                 HealthCheckPathName: /emergency/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
