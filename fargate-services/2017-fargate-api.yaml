@@ -148,11 +148,11 @@ Resources:
                 - Name: !Ref ProjectName
                   Essential: true
                   Image: !Ref EcrImage
-                  ## NOTE: this is probably duplicative of the Cpu/Memory defined just a few lines above...
-                  # CPU and Memory reservations are set to 50% of the default values specified above
-                  Cpu: 256
-                  Memory: 512
-                  MemoryReservation: 512
+                  ## NOTE: these Container resource values can be smaller than Task if there are multiple Containers per Task
+                  ## Since we deploy one Container per Task, there's no reason to use different values
+                  Cpu: !Ref TaskCpu
+                  Memory: !Ref TaskMemory # This is the minimum memory
+                  MemoryReservation: !Ref TaskMemory # This is the upper burstable limit
                   Environment:
                     # 2019-era SSM configuration download architecture
                     - Name: AWS_DEFAULT_REGION
