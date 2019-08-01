@@ -138,9 +138,9 @@ Resources:
                   Image: !Ref EcrImage
                   ## NOTE: this looks duplicative of the Cpu/Memory defined just a few lines above at the Task Definition level
                   # CPU and Memory reservations are set to 50% of the default values specified above
-                  Cpu: TaskCpu
-                  Memory: TaskMemory
-                  MemoryReservation: TaskMemory
+                  Cpu: !Ref TaskCpu
+                  Memory: !Ref TaskMemory
+                  MemoryReservation: !Ref TaskMemory
                   PortMappings:
                     - ContainerPort: !Ref ContainerPort
                   LogConfiguration:
