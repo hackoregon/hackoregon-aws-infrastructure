@@ -136,11 +136,11 @@ Resources:
                 - Name: !Ref ProjectName
                   Essential: true
                   Image: !Ref EcrImage
-                  ## NOTE: this looks duplicative of the Cpu/Memory defined just a few lines above at the Task Definition level
-                  # CPU and Memory reservations are set to 50% of the default values specified above
+                  ## NOTE: these Container resource values can be smaller than Task if there are multiple Containers per Task
+                  ## Since we deploy one Container per Task, there's no reason to use different values
                   Cpu: !Ref TaskCpu
-                  Memory: !Ref TaskMemory
-                  MemoryReservation: !Ref TaskMemory
+                  Memory: !Ref TaskMemory # This is the minimum memory
+                  MemoryReservation: !Ref TaskMemory # This is the upper burstable limit
                   PortMappings:
                     - ContainerPort: !Ref ContainerPort
                   LogConfiguration:

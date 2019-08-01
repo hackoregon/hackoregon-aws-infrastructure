@@ -14,8 +14,8 @@ Description: >
     Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 14 July 2019
-    Author Dan Carr (ddcarr@gmail.com), Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com)
+    Last Modified: 31 July 2019
+    Author Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com), Dan Carr (ddcarr@gmail.com)
 
 Parameters:
 
@@ -160,8 +160,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -185,8 +185,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 0
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -210,8 +210,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 0
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -235,8 +235,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 0
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -260,8 +260,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -285,8 +285,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 0
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -383,8 +383,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
@@ -411,8 +411,8 @@ Resources:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
-                TaskCpu: 512
-                TaskMemory: 1024
+                TaskCpu: 256
+                TaskMemory: 512
                 ContainerPort: 8000
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
