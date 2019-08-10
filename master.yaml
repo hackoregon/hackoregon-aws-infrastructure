@@ -274,13 +274,13 @@ Resources:
             Parameters:
                 ProjectName: 2019-transportation
                 DeploymentSsmNamespace: /staging
-                HealthCheckPathName: /transportation2019/schema/
+                HealthCheckPathName: /transportation2019/v1/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ListenerRulePriority: 28
                 ListenerRuleTlsPriority: 29
                 Host: service.civicpdx.org
-                Path: /transportation2019*
+                Path: /transportation2019/*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
