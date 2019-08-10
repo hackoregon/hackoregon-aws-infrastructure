@@ -294,6 +294,31 @@ Resources:
 
 # 2018 API services - Fargate
 
+    2018DR:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: disaster-resilience-service
+                DeploymentSsmNamespace: /production
+                HealthCheckPathName: /disaster-resilience/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 83 # 30
+                ListenerRuleTlsPriority: 84 # 31
+                Host: service.civicpdx.org
+                Path: /disaster-resilience*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/disaster-resilience-service:latest
+
     2018ND:
         Type: AWS::CloudFormation::Stack
         Properties:
@@ -321,18 +346,18 @@ Resources:
 
 # 2018 API services - EC2-based
 
-    2018DR:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /disaster-resilience*
+    # 2018DR:
+    #    Type: AWS::CloudFormation::Stack
+    #    Properties:
+    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/disaster-resilience-service/service.yaml
+    #        Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             Host: service.civicpdx.org
+    #             Path: /disaster-resilience*
 
     2018HA:
        Type: AWS::CloudFormation::Stack
