@@ -294,7 +294,7 @@ Resources:
 
 # 2018 API services - Fargate
 
-    2018NeDe:
+    2018ND:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
@@ -304,8 +304,8 @@ Resources:
                 HealthCheckPathName: /neighborhood-development/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ListenerRulePriority: 83
-                ListenerRuleTlsPriority: 84
+                ListenerRulePriority: 36
+                ListenerRuleTlsPriority: 37
                 Host: service.civicpdx.org
                 Path: /neighborhood-development*
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -359,19 +359,6 @@ Resources:
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: service.civicpdx.org
                 Path: /local-elections*
-
-    # 2018ND:
-    #    Type: AWS::CloudFormation::Stack
-    #    Properties:
-    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/neighborhood-development-service/service.yaml
-    #        Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             Host: service.civicpdx.org
-    #             Path: /neighborhood-development*
 
     2018TS:
        Type: AWS::CloudFormation::Stack
