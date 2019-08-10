@@ -307,7 +307,7 @@ Resources:
                 ListenerRulePriority: 30
                 ListenerRuleTlsPriority: 31
                 Host: service.civicpdx.org
-                Path: /disaster-resilience*
+                Path: /disaster-resilience/*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
