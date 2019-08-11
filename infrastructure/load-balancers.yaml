@@ -102,9 +102,14 @@ Outputs:
     PublicAlbDnsName:
         Value:
             !GetAtt LoadBalancer.DNSName
+
     PublicAlbHostname:
         Value:
             !If [ NoSslCertificate, !Join [ '', [ 'http://', !GetAtt LoadBalancer.DNSName ] ], !Join [ '', [ 'https://', !GetAtt LoadBalancer.DNSName ] ] ]
+
     SslCertificate:
         Value:
             !If [ SslCertificate, True, False ]
+    
+    CanonicalHostedZoneId:
+        Value: !GetAtt LoadBalancer.CanonicalHostedZoneID

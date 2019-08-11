@@ -87,9 +87,8 @@ Resources:
             - Name: 2017.civicplatform.org.
               Type: A
               AliasTarget:
-                HostedZoneId: !GetAtt ALB.CanonicalHostedZoneNameID
-                DNSName: !GetAtt ALB.DNSName
-
+                HostedZoneId: !GetAtt ALB.Outputs.CanonicalHostedZoneId
+                DNSName: !GetAtt ALB.Outputs.PublicAlbDnsName
 
 ##### EC2 instances #####
 
