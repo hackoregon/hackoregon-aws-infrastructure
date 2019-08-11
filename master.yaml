@@ -76,6 +76,21 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
 
+#### DNS records ####
+
+    DNSFrontend2017:
+        Type: AWS::Route53::RecordSetGroup
+        Properties:
+            HostedZoneName: civicplatform.org.
+            Comment: Zone apex alias targeted to ALB LoadBalancer
+            RecordSets:
+            - Name: 2017.civicplatform.org.
+              Type: A
+              AliasTarget:
+                HostedZoneId: !GetAtt ALB.CanonicalHostedZoneNameID
+                DNSName: !GetAtt ALB.DNSName
+
+
 ##### EC2 instances #####
 
     BastionHost:
