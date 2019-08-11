@@ -56,7 +56,7 @@ Parameters:
         Type: String
 
     DesiredCount: 
-        Default: 0
+        Default: 0 # Allows us to deploy the service even if there's no container image to launch
         Description: How many instances of this task should we run across our cluster?
         Type: Number
 
@@ -65,12 +65,12 @@ Parameters:
         Type: String
 
     TaskCpu:
-        Default: 512
+        Default: 256
         Description: How much CPU to give the ECS task, in CPU units (where 1,024 units is 1 CPU) or vCPUs
         Type: Number
 
     TaskMemory:
-        Default: 1024
+        Default: 512
         Description: How much memory to give the ECS task in megabytes
         Type: Number
 
