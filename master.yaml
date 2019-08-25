@@ -233,7 +233,7 @@ Resources:
                 Path: /housing2019*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 0
+                DesiredCount: 1
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 256
                 TaskMemory: 512
@@ -426,7 +426,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ListenerRulePriority: 52
-                ListenerRuleTlsPriority: 53 
+                ListenerRuleTlsPriority: 53
                 Host: service.civicpdx.org
                 Path: /emergency*
                 VPC: !GetAtt VPC.Outputs.VPC
