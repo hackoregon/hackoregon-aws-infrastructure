@@ -224,7 +224,7 @@ Resources:
             Parameters:
                 ProjectName: 2019-housing
                 DeploymentSsmNamespace: /staging
-                HealthCheckPathName: /housing/schema/
+                HealthCheckPathName: /housing2019/v1/schema/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 ListenerRulePriority: 24
