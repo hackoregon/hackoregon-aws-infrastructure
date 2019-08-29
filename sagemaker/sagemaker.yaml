@@ -129,3 +129,11 @@ Resources:
       NotebookInstanceName: EdBorasky
       RoleArn: !GetAtt SageMakerRole.Arn
       VolumeSizeInGB: 5
+
+  MaryAnneBox:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties:
+      InstanceType: ml.t2.medium
+      NotebookInstanceName: MaryAnne
+      RoleArn: !GetAtt SageMakerRole.Arn
+      VolumeSizeInGB: 5
