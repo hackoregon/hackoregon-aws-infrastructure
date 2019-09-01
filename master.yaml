@@ -76,6 +76,42 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
 
+#### DNS records ####
+
+    DNSFrontend2017:
+        Type: AWS::Route53::RecordSetGroup
+        Properties:
+            HostedZoneName: civicplatform.org.
+            Comment: Zone apex alias targeted to ALB LoadBalancer
+            RecordSets:
+            - Name: 2017.civicplatform.org.
+              Type: A
+              AliasTarget:
+                HostedZoneId: !GetAtt ALB.Outputs.CanonicalHostedZoneId
+                DNSName: !GetAtt ALB.Outputs.PublicAlbDnsName
+
+    DNSFrontend2017Alias:
+        Type: AWS::Route53::RecordSet
+        Properties:
+            HostedZoneName: civicpdx.org.
+            Comment: Redirecting a legacy domain
+            Name: 2017.civicpdx.org
+            Type: CNAME
+            TTL: '900'
+            ResourceRecords: 
+            - 2017.civicplatform.org
+
+    DNSFrontend2018Alias:
+        Type: AWS::Route53::RecordSet
+        Properties:
+            HostedZoneName: civicplatform.org.
+            Comment: Redirecting the www
+            Name: www.civicplatform.org
+            Type: CNAME
+            TTL: '900'
+            ResourceRecords: 
+            - civicplatform.org
+
 ##### EC2 instances #####
 
     BastionHost:
@@ -123,8 +159,8 @@ Resources:
                 DesiredCount: 2
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: 2017.civicpdx.org
-                Host2: civicpdx.org
+                Host: 2017.civicplatform.org
+                Host2: www.civicpdx.org
                 Path: /*
 
     Civic2018Service:
@@ -138,6 +174,7 @@ Resources:
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
                 Host: civicplatform.org
+                # Host2: www.civicplatform.org
                 Path: /*
 
 # 2019 API services - Fargate
