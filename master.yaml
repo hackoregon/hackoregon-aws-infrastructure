@@ -150,18 +150,44 @@ Resources:
 # Frontend Application services
 
     Civic2017Service:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-frontend.yaml
+           Parameters:
+                ProjectName: civic-2017-service
+                HealthCheckPathName: /2017/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 15
+                ListenerRuleTlsPriority: 16
+                ListenerRule2Priority: 17
                 Host: 2017.civicplatform.org
                 Host2: www.civicpdx.org
                 Path: /*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 2
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 3000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
+
+    # Civic2017Service:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
+    #         Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             Host: 2017.civicplatform.org
+    #             Host2: www.civicpdx.org
+    #             Path: /*
 
     Civic2018Service:
        Type: AWS::CloudFormation::Stack
