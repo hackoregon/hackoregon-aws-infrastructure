@@ -175,19 +175,31 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
 
-    Civic2018Service:
+    CivicPlatformService:
        Type: AWS::CloudFormation::Stack
        Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2018-service/service.yaml
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-frontend.yaml
            Parameters:
+                ProjectName: civic-2018-service
+                HealthCheckPathName: /2018/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 45
+                ListenerRuleTlsPriority: 46
+                ListenerRule2Priority: 47
+                Host: civicplatform.org
+                Host2: www.civicplatform.org
+                Path: /*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: civicplatform.org
-                # Host2: www.civicplatform.org
-                Path: /*
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 3000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2018:latest
 
 # 2019 API services - Fargate
 
