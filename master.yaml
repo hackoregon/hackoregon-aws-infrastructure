@@ -175,20 +175,6 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
 
-    # Civic2017Service:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/civic-2017-service/service.yaml
-    #         Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             Host: 2017.civicplatform.org
-    #             Host2: www.civicpdx.org
-    #             Path: /*
-
     Civic2018Service:
        Type: AWS::CloudFormation::Stack
        Properties:
