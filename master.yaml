@@ -98,7 +98,7 @@ Resources:
             Name: 2017.civicpdx.org
             Type: CNAME
             TTL: '900'
-            ResourceRecords: 
+            ResourceRecords:
             - 2017.civicplatform.org
 
     DNSFrontend2018Alias:
@@ -109,7 +109,7 @@ Resources:
             Name: www.civicplatform.org
             Type: CNAME
             TTL: '900'
-            ResourceRecords: 
+            ResourceRecords:
             - civicplatform.org
 
 ##### EC2 instances #####
@@ -200,6 +200,32 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2018:latest
+
+    Civic2019Disaster:
+       Type: AWS::CloudFormation::Stack
+       Properties:
+           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-frontend.yaml
+           Parameters:
+                ProjectName: civic-2019-disaster
+                HealthCheckPathName: /2019-disaster-game/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 100
+                ListenerRuleTlsPriority: 101
+                ListenerRule2Priority: 102
+                Host: civicplatform.org
+                Host2: www.civicplatform.org
+                Path: /*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 0
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 3000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2019-disaster-game:latest
 
 # 2019 API services - Fargate
 
@@ -522,6 +548,10 @@ Outputs:
     Civic2018ServiceUrl:
         Description: The URL endpoint for the civic2018 service
         Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2018" ]]
+
+    Civic2019DisasterGameServiceUrl:
+        Description: The URL endpoint for the civic2019DisasterGame service
+        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "2019-disaster-game" ]]
 
 # 2018 URLs
 
