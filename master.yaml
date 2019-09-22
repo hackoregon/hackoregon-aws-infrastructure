@@ -172,7 +172,7 @@ Resources:
 
 # Frontend Application services
 
-    Civic2017Service:
+    Civic2017FrontEnd:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-frontend.yaml
@@ -198,7 +198,7 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/civic-2017:latest
 
-    CivicPlatformService:
+    CivicPlatformFrontEnd:
        Type: AWS::CloudFormation::Stack
        Properties:
            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-frontend.yaml
