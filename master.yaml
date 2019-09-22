@@ -112,6 +112,29 @@ Resources:
             ResourceRecords:
             - civicplatform.org
 
+    DNSDisasterGame:
+        Type: AWS::Route53::RecordSetGroup
+        Properties:
+            HostedZoneName: civicplatform.org.
+            Comment: Zone apex alias targeted to ALB LoadBalancer
+            RecordSets:
+            - Name: disastergame.civicplatform.org.
+              Type: A
+              AliasTarget:
+                HostedZoneId: !GetAtt ALB.Outputs.CanonicalHostedZoneId
+                DNSName: !GetAtt ALB.Outputs.PublicAlbDnsName
+
+    DNSDisasterGame2:
+        Type: AWS::Route53::RecordSetGroup
+        Properties:
+            HostedZoneName: civicplatform.org.
+            Comment: Zone apex alias targeted to ALB LoadBalancer
+            RecordSets:
+            - Name: omsidisastergame.civicplatform.org.
+              Type: A
+              AliasTarget:
+                HostedZoneId: !GetAtt ALB.Outputs.CanonicalHostedZoneId
+                DNSName: !GetAtt ALB.Outputs.PublicAlbDnsName
 ##### EC2 instances #####
 
     BastionHost:
@@ -213,8 +236,8 @@ Resources:
                 ListenerRulePriority: 100
                 ListenerRuleTlsPriority: 101
                 ListenerRule2Priority: 102
-                Host: civicplatform.org
-                Host2: www.civicplatform.org
+                Host: disastergame.civicplatform.org
+                Host2: omsidisastergame.civicplatform.org #dummy address, just needed for the fargate-frontend template
                 Path: /*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
