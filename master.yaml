@@ -433,18 +433,18 @@ Resources:
 
 # 2018 API services - EC2-based
 
-    2018HA:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /housing-affordability*
+    # 2018HA:
+    #    Type: AWS::CloudFormation::Stack
+    #    Properties:
+    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
+    #        Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             Host: service.civicpdx.org
+    #             Path: /housing-affordability*
 
     2018LE:
        Type: AWS::CloudFormation::Stack
