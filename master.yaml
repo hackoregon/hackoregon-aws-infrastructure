@@ -319,7 +319,7 @@ Resources:
                 Path: /sandbox*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
+                DesiredCount: 2
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 256
                 TaskMemory: 512
@@ -379,6 +379,32 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/disaster-resilience-service:latest
+
+    2018HousA:
+
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: housing-affordability-service
+                DeploymentSsmNamespace: /production
+                HealthCheckPathName: /housing-affordability/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 132
+                ListenerRuleTlsPriority: 133
+                Host: service.civicpdx.org
+                Path: /housing-affordability*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/housing-affordability:latest
 
     2018ND:
         Type: AWS::CloudFormation::Stack
