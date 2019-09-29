@@ -380,8 +380,7 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/disaster-resilience-service:latest
 
-    2018HousA:
-
+    2018HA:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
@@ -391,10 +390,10 @@ Resources:
                 HealthCheckPathName: /housing-affordability/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ListenerRulePriority: 132
-                ListenerRuleTlsPriority: 133
+                ListenerRulePriority: 32
+                ListenerRuleTlsPriority: 33
                 Host: service.civicpdx.org
-                Path: /housing-affordability*
+                Path: /housing-affordability/*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 1
@@ -562,7 +561,7 @@ Resources:
                 DeployTarget: integration
                 ProjSettingsDir: housingAPI
                 Host: service.civicpdx.org
-                Path: /housing*
+                Path: /housing/*
 
     transportService:
         Type: AWS::CloudFormation::Stack
