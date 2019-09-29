@@ -405,6 +405,31 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/housing-affordability:latest
 
+    2018LE:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: local-elections-service
+                DeploymentSsmNamespace: /production
+                HealthCheckPathName: /local-elections/
+                Listener: !GetAtt ALB.Outputs.Listener
+                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 34
+                ListenerRuleTlsPriority: 35
+                Host: service.civicpdx.org
+                Path: /local-elections/*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/local-elections:latest
+
     2018ND:
         Type: AWS::CloudFormation::Stack
         Properties:
@@ -431,32 +456,6 @@ Resources:
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/neighborhood-development:latest
 
 # 2018 API services - EC2-based
-
-    # 2018HA:
-    #    Type: AWS::CloudFormation::Stack
-    #    Properties:
-    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/housing-affordability-service/service.yaml
-    #        Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             Host: service.civicpdx.org
-    #             Path: /housing-affordability*
-
-    2018LE:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/local-elections-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
-                Listener: !GetAtt ALB.Outputs.Listener
-                ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                Host: service.civicpdx.org
-                Path: /local-elections*
 
     2018TS:
        Type: AWS::CloudFormation::Stack
