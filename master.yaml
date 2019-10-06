@@ -14,7 +14,7 @@ Description: >
     Based on AWSLabs ECS Reference Architecture
     https://github.com/awslabs/ecs-refarch-cloudformation
 
-    Last Modified: 31 July 2019
+    Last Modified: 05 October 2019
     Author Mike Lonergan (mikethecanuck@gmail.com), Ian Turner (iant18150@gmail.com), Dan Carr (ddcarr@gmail.com)
 
 Parameters:
@@ -479,21 +479,6 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/transportation-systems-service:latest
-
-# 2018 API services - EC2-based
-
-    # 2018TS:
-    #    Type: AWS::CloudFormation::Stack
-    #    Properties:
-    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
-    #        Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             Host: service.civicpdx.org
-    #             Path: /transportation-systems/*
 
 # 2017 API services - Fargate
 
