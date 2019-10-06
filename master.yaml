@@ -455,20 +455,45 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/neighborhood-development:latest
 
-# 2018 API services - EC2-based
-
     2018TS:
-       Type: AWS::CloudFormation::Stack
-       Properties:
-           TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
-           Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/2019-fargate-api.yaml
+            Parameters:
+                ProjectName: transportation-systems-service
+                DeploymentSsmNamespace: /production
+                HealthCheckPathName: /transportation-systems/
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+                ListenerRulePriority: 38
+                ListenerRuleTlsPriority: 39
                 Host: service.civicpdx.org
-                Path: /transportation-systems*
+                Path: /transportation-systems/*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/transportation-systems-service:latest
+
+# 2018 API services - EC2-based
+
+    # 2018TS:
+    #    Type: AWS::CloudFormation::Stack
+    #    Properties:
+    #        TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/transportation-systems-service/service.yaml
+    #        Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             Host: service.civicpdx.org
+    #             Path: /transportation-systems/*
 
 # 2017 API services - Fargate
 
@@ -576,7 +601,7 @@ Resources:
                 DeployTarget: integration
                 ProjSettingsDir: transDjango
                 Host: service.civicpdx.org
-                Path: /transport*
+                Path: /transport/*
 
 Outputs:
 
