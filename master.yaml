@@ -135,6 +135,7 @@ Resources:
               AliasTarget:
                 HostedZoneId: !GetAtt ALB.Outputs.CanonicalHostedZoneId
                 DNSName: !GetAtt ALB.Outputs.PublicAlbDnsName
+
 ##### EC2 instances #####
 
     BastionHost:
@@ -183,20 +184,6 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/endpoint-service-catalog:latest
-
-    # EndPoints:
-    #     Type: AWS::CloudFormation::Stack
-    #     Properties:
-    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
-    #         Parameters:
-    #             VPC: !GetAtt VPC.Outputs.VPC
-    #             Cluster: !GetAtt ECS.Outputs.Cluster
-    #             DesiredCount: 2
-    #             Listener: !GetAtt ALB.Outputs.Listener
-    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-    #             ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
-    #             Host: service.civicpdx.org
-    #             Path: /
 
 # Frontend Application services
 
