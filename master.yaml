@@ -166,10 +166,10 @@ Resources:
                 HealthCheckPathName: /
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ListenerRulePriority: 179
-                ListenerRuleTlsPriority: 180
-                ListenerRuleSecondaryPriority: 181
-                ListenerRuleSecondaryTlsPriority: 182
+                ListenerRulePriority: 79
+                ListenerRuleTlsPriority: 80
+                ListenerRuleSecondaryPriority: 81
+                ListenerRuleSecondaryTlsPriority: 82
                 Host: service.civicpdx.org
                 Path: /
                 PathSecondary: /__assets*
