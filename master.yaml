@@ -156,19 +156,47 @@ Resources:
 
 # API Endpoint catalog
 
-    EndPoints:
+    EndpointsCatalogPage:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
+            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/fargate-services/fargate-endpoints-catalog.yaml
             Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 2
+                ProjectName: endpoints-catalog-service
+                DeploymentSsmNamespace: /production
+                HealthCheckPathName: /
                 Listener: !GetAtt ALB.Outputs.Listener
                 ListenerTls: !GetAtt ALB.Outputs.ListenerTls
-                ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+                ListenerRulePriority: 179
+                ListenerRuleTlsPriority: 180
+                ListenerRuleSecondaryPriority: 181
+                ListenerRuleSecondaryTlsPriority: 182
                 Host: service.civicpdx.org
                 Path: /
+                PathSecondary: /__assets*
+                VPC: !GetAtt VPC.Outputs.VPC
+                Cluster: !GetAtt ECS.Outputs.Cluster
+                DesiredCount: 1
+                ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
+                TaskCpu: 256
+                TaskMemory: 512
+                ContainerPort: 8000
+                SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                EcrImage: 845828040396.dkr.ecr.us-west-2.amazonaws.com/production/endpoint-service-catalog:latest
+
+    # EndPoints:
+    #     Type: AWS::CloudFormation::Stack
+    #     Properties:
+    #         TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/services/endpoint-service/service.yaml
+    #         Parameters:
+    #             VPC: !GetAtt VPC.Outputs.VPC
+    #             Cluster: !GetAtt ECS.Outputs.Cluster
+    #             DesiredCount: 2
+    #             Listener: !GetAtt ALB.Outputs.Listener
+    #             ListenerTls: !GetAtt ALB.Outputs.ListenerTls
+    #             ALB: !GetAtt ALB.Outputs.LoadBalancerUrl
+    #             Host: service.civicpdx.org
+    #             Path: /
 
 # Frontend Application services
 
@@ -269,7 +297,7 @@ Resources:
                 Path: /examplar*
                 VPC: !GetAtt VPC.Outputs.VPC
                 Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
+                DesiredCount: 2
                 ECSTaskExecutionRole: !GetAtt ECS.Outputs.ECSTaskExecutionRole
                 TaskCpu: 256
                 TaskMemory: 512
