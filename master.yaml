@@ -141,11 +141,11 @@ Resources:
     RDSTestInstance:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/databases/rds-postgres.yaml
+            TemplateURL: https://hacko-infrastructure-cfn.s3-us-west-2.amazonaws.com/database/rds-postgres.yaml ## TODO: figure out why the typical URL gets us Access Denied on all attempts
             Parameters:
                 AvailabilityZone: us-west-2a
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.DBSecurityGroup
-                SubnetGroup: !GetAtt VPC.Outputs.PublicDBSubnetGroup
+                SubnetGroupName: !GetAtt VPC.Outputs.PublicDBSubnetGroup
                 InstanceName: RDSTestInstance
                 InstanceSize: db.t2.micro
                 InstanceStorage: 20

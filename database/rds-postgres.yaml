@@ -1,4 +1,3 @@
-AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
 
     AvailabilityZone:
@@ -10,9 +9,9 @@ Parameters:
         Description: Select the Security Group to use for this RDS instance
         Type: AWS::EC2::SecurityGroup::Id
 
-    SubnetGroup:
-        Description: Choose the subnet to which this RDS instance should be deployed
-        Type: AWS::RDS::DBSubnetGroup
+    SubnetGroupName:
+        Description: The Subnet Group(s) to which this RDS instance should be deployed
+        Type: String
 
     ## Instance-specific parameters
 
@@ -45,7 +44,7 @@ Resources:
             DBInstanceClass: !Ref InstanceSize
             DBInstanceIdentifier: !Ref InstanceName
             DBName: !Ref DatabaseName
-            DBSubnetGroupName: !Ref SubnetGroup
+            DBSubnetGroupName: !Ref SubnetGroupName
             Engine: postgres
             MasterUsername: mydatahack #todo
             MasterUserPassword: mydatahackrocks #todo
