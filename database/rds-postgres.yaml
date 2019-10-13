@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+
+AvailabilityZone:
+    Description: The AZ in which the RDS instance is deployed
+    Type: String
+    Default: us-west-2a
+
+SecurityGroup:
+    Description: Select the Security Group to use for this RDS instance
+    Type: AWS::EC2::SecurityGroup::Id
+
+SubnetGroup:
+    Description: Choose the subnet to which this RDS instance should be deployed
+    Type: AWS::RDS::DBSubnetGroup
+
+## Instance-specific parameters
+
+InstanceName:
+    Description: The name by which the DB instance is labelled in the RDS console
+    Type: String
+
+InstanceSize:
+    Description: The instance class (size) for this RDS instance
+    Type: String
+    Default: db.t2.micro
+
+InstanceStorage:
+    Description: The amount of storage in GB allocated to the RDS instance
+    Type: String
+
+## Database-specific parameters
+
+DatabaseName:
+    Description: The name of the primary database on this instance
+    Type: String
+
+Resources:
+
+    PostgresRDS:
+        Type: "AWS::RDS::DBInstance"
+        Properties:
+            AllocatedStorage: !Ref InstanceStorage
+            AvailabilityZone: !Ref AvailabilityZone
+            DBInstanceClass: !Ref InstanceSize
+            DBInstanceIdentifier: !Ref InstanceName
+            DBName: !Ref DatabaseName
+            DBSubnetGroupName: !Ref SubnetGroup
+            Engine: postgres
+            MasterUsername: mydatahack #todo
+            MasterUserPassword: mydatahackrocks #todo
+            MultiAZ: false
+            Port: 5432
+            PubliclyAccessible: true
+            Tags:
+                - Key: Name
+                  Value: !Ref InstanceName
+            VPCSecurityGroups:
+                - !Ref SecurityGroup
