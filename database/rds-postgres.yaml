@@ -27,6 +27,17 @@ Parameters:
     InstanceStorage:
         Description: The amount of storage in GB allocated to the RDS instance
         Type: String
+        ConstraintDescription: must be between 5 and 1024 GB.
+
+    # MasterUsername:
+    #     Description: The database admin account username
+    #     Type: String
+    #     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
+    # MasterPassword:
+    #     Description: The database admin account password
+    #     Type: String
+    #     ConstraintDescription: must contain only alphanumeric characters.
 
     ## Database-specific parameters
 
@@ -37,17 +48,20 @@ Parameters:
 Resources:
 
     PostgresRDS:
-        Type: "AWS::RDS::DBInstance"
+        Type: AWS::RDS::DBInstance
         Properties:
+            AllowMajorVersionUpgrade: False
+            AutoMinorVersionUpgrade: True
             AllocatedStorage: !Ref InstanceStorage
+            StorageType: gp2
             AvailabilityZone: !Ref AvailabilityZone
             DBInstanceClass: !Ref InstanceSize
             DBInstanceIdentifier: !Ref InstanceName
             DBName: !Ref DatabaseName
             DBSubnetGroupName: !Ref SubnetGroupName
             Engine: postgres
-            MasterUsername: mydatahack #todo
-            MasterUserPassword: mydatahackrocks #todo
+            MasterUsername: dummyuser #todo
+            MasterUserPassword: dummypassword #todo
             MultiAZ: false
             Port: 5432
             PubliclyAccessible: true

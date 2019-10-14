@@ -53,6 +53,7 @@ Resources:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-ECS-Hosts
 
+  # This security group is meant for production-protected databases.
   # This security group defines who/where is allowed to access the DB hosts directly.
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -67,6 +68,22 @@ Resources:
         Tags:
             - Key: Name
               Value: !Sub ${EnvironmentName}-DB-Hosts
+
+  # This security group is meant for developer-accessible databases.
+  DBPublicSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        VpcId: !Ref VPC
+        GroupDescription: Access to DB instances from anywhere on the Internet
+        SecurityGroupIngress:
+              # Allow access from anywhere to the DB instances on port 5432
+              - CidrIp: 0.0.0.0/0
+                IpProtocol: TCP
+                FromPort: 0
+                ToPort: 5432
+        Tags:
+            - Key: Name
+              Value: !Sub ${EnvironmentName}-DB-Public-Hosts
 
   # This security group defines who/where is allowed to access load balancer
   LoadBalancerSecurityGroup:
@@ -116,7 +133,7 @@ Resources:
 Outputs:
 
     BastionHostSecurityGroup:
-        Description: A reference to the security group for load balancers
+        Description: A reference to the security group for bastion hosts
         Value: !Ref BastionHostSecurityGroup
 
     ECSHostSecurityGroup:
@@ -124,13 +141,17 @@ Outputs:
         Value: !Ref ECSHostSecurityGroup
 
     DBSecurityGroup:
-        Description: A reference to the security group for load balancers
+        Description: A reference to the security group for protected DB instances
         Value: !Ref DBSecurityGroup
+
+    DBPublicSecurityGroup:
+        Description: A reference to the security group for public DB instances
+        Value: !Ref DBPublicSecurityGroup
 
     LoadBalancerSecurityGroup:
         Description: A reference to the security group for load balancers
         Value: !Ref LoadBalancerSecurityGroup
 
     ECSTaskSecurityGroup:
-        Description: A reference to the security group for ECS hosts
+        Description: A reference to the security group for ECS tasks
         Value: !Ref ECSTaskSecurityGroup
