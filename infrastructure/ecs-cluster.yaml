@@ -36,8 +36,10 @@ Parameters:
 
     ECSAMI:
         Description: ECS-Optimized AMI ID
-        Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-        Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
+        #### Temporary - civic-devops-282 ###
+        # Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+        Type: String
+        # Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
 
 Resources:
 

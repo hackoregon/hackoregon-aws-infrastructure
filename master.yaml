@@ -139,7 +139,7 @@ Resources:
 
 ##### Databases #####
 
-    RDSTestInstance2:
+    RDSTestInstance:
         Type: AWS::CloudFormation::Stack
         Properties:
             TemplateURL: https://s3-us-west-2.amazonaws.com/hacko-infrastructure-cfn/database/rds-postgres.yaml
@@ -147,12 +147,12 @@ Resources:
                 AvailabilityZone: us-west-2a
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.DBPublicSecurityGroup
                 SubnetGroupName: !GetAtt VPC.Outputs.PublicDBSubnetGroup
-                InstanceName: rdstest20191015
-                InstanceSize: db.t2.micro
-                InstanceStorage: 20
-                DatabaseName: RDSTestDb1
-                # MasterUsername: '{{resolve:ssm:parampath/paramname1:1}}'
-                # MasterPassword: "{{resolve:ssm-secure:parampath/paramname2:1}}"
+                InstanceName: rdstestinstance
+                InstanceSize: db.t2.small
+                InstanceStorage: 50
+                DatabaseName: RDSTestDbMike
+                # MasterUsername: '{{resolve:ssm:/production/2019/RDS/rdstestinstance/MASTER_USERNAME:1}}'
+                # MasterPassword: "{{resolve:ssm-secure:/production/2019/RDS/rdstestinstance/MASTER_PASSWORD:1}}"
 
 ##### EC2 instances #####
 
