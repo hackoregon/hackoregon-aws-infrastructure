@@ -75,6 +75,7 @@ Resources:
                 VPC: !GetAtt VPC.Outputs.VPC
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                ECSAMI: ami-0f7bc74af1927e7c8 # TEMPORARY civic-devops-282
 
 #### DNS records ####
 
