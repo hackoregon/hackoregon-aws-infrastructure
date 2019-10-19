@@ -29,15 +29,17 @@ Parameters:
         Type: String
         ConstraintDescription: must be between 5 and 1024 GB.
 
-    # MasterUsername:
-    #     Description: The database admin account username
-    #     Type: String
-    #     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+    MasterUsername:
+        Description: The database admin account username
+        Type: String
+        ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+        Default: dummyusername1
 
-    # MasterPassword:
-    #     Description: The database admin account password
-    #     Type: String
-    #     ConstraintDescription: must contain only alphanumeric characters.
+    MasterPassword:
+        Description: The database admin account password
+        Type: String
+        ConstraintDescription: must contain only alphanumeric characters.
+        Default: dummypassword2
 
     ## Database-specific parameters
 
@@ -60,8 +62,8 @@ Resources:
             DBName: !Ref DatabaseName
             DBSubnetGroupName: !Ref SubnetGroupName
             Engine: postgres
-            MasterUsername: dummyuser #todo
-            MasterUserPassword: dummypassword #todo
+            MasterUsername: !Ref MasterUsername
+            MasterUserPassword: !Ref MasterPassword
             MultiAZ: false
             Port: 5432
             PubliclyAccessible: true
