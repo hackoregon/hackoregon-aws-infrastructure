@@ -38,6 +38,7 @@ Parameters:
     MasterPassword:
         Description: The database admin account password
         Type: String
+        # Type: SecureString # Works around error "SSM Secure reference is not supported in [AWS::CloudFormation::Stack/Properties/Parameters/MasterPassword]"
         ConstraintDescription: must contain only alphanumeric characters.
         Default: dummypassword2
 
@@ -63,7 +64,8 @@ Resources:
             DBSubnetGroupName: !Ref SubnetGroupName
             Engine: postgres
             MasterUsername: !Ref MasterUsername
-            MasterUserPassword: !Ref MasterPassword
+            # MasterUserPassword: !Ref MasterPassword
+            MasterUserPassword: "{{resolve:ssm-secure:/production/2019/RDS/rdstestinstance/MASTER_PASSWORD:1}}"
             MultiAZ: false
             Port: 5432
             PubliclyAccessible: true
