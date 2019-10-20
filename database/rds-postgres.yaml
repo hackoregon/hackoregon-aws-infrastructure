@@ -1,0 +1,82 @@
+Description: >
+
+    This template creates an RDS instance with a single Database and a master username + password.
+    It does not initialize that database with data (e.g. from backup), nor create a database-specific, lesser-privileged
+    user to expose to upstream applications.
+    Relevant to the HackOregon Civic Platform projects, this does not add the PostGIS extension to the database.
+
+Parameters:
+
+    AvailabilityZone:
+        Description: The AZ in which the RDS instance is deployed
+        Type: String
+        Default: us-west-2a
+
+    SecurityGroup:
+        Description: Select the Security Group to use for this RDS instance
+        Type: AWS::EC2::SecurityGroup::Id
+
+    SubnetGroupName:
+        Description: The Subnet Group(s) to which this RDS instance should be deployed
+        Type: String
+
+    ## Instance-specific parameters
+
+    InstanceName:
+        Description: The name by which the DB instance is labelled in the RDS console
+        Type: String
+
+    InstanceSize:
+        Description: The instance class (size) for this RDS instance
+        Type: String
+        Default: db.t2.micro
+
+    InstanceStorage:
+        Description: The amount of storage in GB allocated to the RDS instance
+        Type: String
+        ConstraintDescription: must be between 5 and 1024 GB.
+
+    SsmParameterPath:
+        Description: The path in the SSM Parameter Store in which the RDS creds are stored
+        Type: String
+
+    # SsmParamVersion: 
+    #     Description: The specific version of the SSM Parameter Store parameter to retrieve - all usage of {{resolve}} require explicit versioning at time of writing this template
+    #     Type: String
+    #     Default: 1
+
+    ## Database-specific parameters
+
+    DatabaseName:
+        Description: The name of the primary database on this instance
+        Type: String
+
+Resources:
+
+    PostgresRDS:
+        Type: AWS::RDS::DBInstance
+        Properties:
+            AllowMajorVersionUpgrade: False
+            AutoMinorVersionUpgrade: True
+            AllocatedStorage: !Ref InstanceStorage
+            StorageType: gp2
+            AvailabilityZone: !Ref AvailabilityZone
+            DBInstanceClass: !Ref InstanceSize
+            DBInstanceIdentifier: !Ref InstanceName
+            DBName: !Ref DatabaseName
+            DBSubnetGroupName: !Ref SubnetGroupName
+            Engine: postgres
+            ### All usage of {{resolve}} require explictly specifying a version of the Parameter being retrieved, at least at time of writing this template
+            ### When performing a Fn::Join operation, apparently the resulting string doesn't have to be escaped with quotes - it's already output with the necessary handling?
+            # MasterUsername: '{{resolve:ssm:/production/2019/RDS/rdstestinstance/MASTER_USERNAME:1}}'
+            MasterUsername: !Join [ "", ["{{resolve:ssm:", !Ref SsmParameterPath, "/MASTER_USERNAME:1}}"]]
+            # MasterUserPassword: "{{resolve:ssm-secure:/production/2019/RDS/rdstestinstance/MASTER_PASSWORD:1}}"
+            MasterUserPassword: !Join [ "", ["{{resolve:ssm-secure:", !Ref SsmParameterPath, "/MASTER_PASSWORD:1}}"]]
+            MultiAZ: false
+            Port: 5432
+            PubliclyAccessible: true
+            Tags:
+                - Key: Name
+                  Value: !Ref InstanceName
+            VPCSecurityGroups:
+                - !Ref SecurityGroup
