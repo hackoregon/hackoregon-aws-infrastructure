@@ -1,3 +1,8 @@
+Description: >
+
+    This template creates an RDS instance 
+
+
 Parameters:
 
     AvailabilityZone:
@@ -42,6 +47,17 @@ Parameters:
         ConstraintDescription: must contain only alphanumeric characters.
         Default: dummypassword2
 
+    ## SSM path-specific parameters
+
+    SsmParameterPath:
+        Description: The path in the SSM Parameter Store in which the RDS creds are stored
+        Type: String
+
+    PasswordParamVersion: 
+        Description: The specific version of the SSM Parameter Store parameter to retrieve - all usage of {{resolve}} require this at time of writing this template
+        Type: String
+        Default: 1
+
     ## Database-specific parameters
 
     DatabaseName:
@@ -63,9 +79,12 @@ Resources:
             DBName: !Ref DatabaseName
             DBSubnetGroupName: !Ref SubnetGroupName
             Engine: postgres
-            MasterUsername: !Ref MasterUsername
-            # MasterUserPassword: !Ref MasterPassword
-            MasterUserPassword: "{{resolve:ssm-secure:/production/2019/RDS/rdstestinstance/MASTER_PASSWORD:1}}"
+            ### All usage of {{resolve}} require explictly specifying a version of the Parameter being retrieved, at least at time of writing this template
+            ### When performing a Fn::Join operation, apparently the resulting string doesn't have to be escaped with quotes - it's already output with the necessary handling?
+            # MasterUsername: '{{resolve:ssm:/production/2019/RDS/rdstestinstance/MASTER_USERNAME:1}}'
+            MasterUsername: !Join [ "", ["{{resolve:ssm:", !Ref SsmParameterPath, "/MASTER_USERNAME:1}}"]]
+            # MasterUserPassword: "{{resolve:ssm-secure:/production/2019/RDS/rdstestinstance/MASTER_PASSWORD:1}}"
+            MasterUserPassword: !Join [ "", ["{{resolve:ssm-secure:", !Ref SsmParameterPath, "/MASTER_PASSWORD:1}}"]]
             MultiAZ: false
             Port: 5432
             PubliclyAccessible: true
