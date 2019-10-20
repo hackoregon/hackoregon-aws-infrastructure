@@ -1,7 +1,9 @@
 Description: >
 
-    This template creates an RDS instance 
-
+    This template creates an RDS instance with a single Database and a master username + password.
+    It does not initialize that database with data (e.g. from backup), nor create a database-specific, lesser-privileged
+    user to expose to upstream applications.
+    Relevant to the HackOregon Civic Platform projects, this does not add the PostGIS extension to the database.
 
 Parameters:
 
@@ -34,29 +36,14 @@ Parameters:
         Type: String
         ConstraintDescription: must be between 5 and 1024 GB.
 
-    MasterUsername:
-        Description: The database admin account username
-        Type: String
-        ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
-        Default: dummyusername1
-
-    MasterPassword:
-        Description: The database admin account password
-        Type: String
-        # Type: SecureString # Works around error "SSM Secure reference is not supported in [AWS::CloudFormation::Stack/Properties/Parameters/MasterPassword]"
-        ConstraintDescription: must contain only alphanumeric characters.
-        Default: dummypassword2
-
-    ## SSM path-specific parameters
-
     SsmParameterPath:
         Description: The path in the SSM Parameter Store in which the RDS creds are stored
         Type: String
 
-    PasswordParamVersion: 
-        Description: The specific version of the SSM Parameter Store parameter to retrieve - all usage of {{resolve}} require this at time of writing this template
-        Type: String
-        Default: 1
+    # SsmParamVersion: 
+    #     Description: The specific version of the SSM Parameter Store parameter to retrieve - all usage of {{resolve}} require explicit versioning at time of writing this template
+    #     Type: String
+    #     Default: 1
 
     ## Database-specific parameters
 
