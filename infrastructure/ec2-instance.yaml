@@ -82,8 +82,11 @@ Resources:
       SubnetId: !Ref Subnet
       ImageId: !FindInMap [HackoImageMap, !Ref AmiName, AMI]
       Tags:
-      -
-        Key: Name
-        Value: !Sub ${EnvironmentName} !Sub ${ServerName}
-        Key: Environment
-        Value: !Ref EnvironmentName
+        - Key: Name
+          Value: !Sub ${EnvironmentName} !Sub ${ServerName}
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: Account
+          Value: HackOregon
+        - Key: Project
+          Value: Admin

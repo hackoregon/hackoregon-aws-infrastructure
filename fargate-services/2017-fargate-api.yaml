@@ -132,6 +132,11 @@ Resources:
                 - ContainerName: !Ref ProjectName
                   ContainerPort: !Ref ContainerPort
                   TargetGroupArn: !Ref TargetGroup
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: !Ref ProjectName
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
@@ -144,6 +149,11 @@ Resources:
               - FARGATE
             ExecutionRoleArn: !Ref ECSTaskExecutionRole
             TaskRoleArn: !Ref TaskRole
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: !Ref ProjectName
             ContainerDefinitions:
                 - Name: !Ref ProjectName
                   Essential: true

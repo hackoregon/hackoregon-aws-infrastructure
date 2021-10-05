@@ -44,6 +44,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Ref EnvironmentName
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     InternetGateway:
         Type: AWS::EC2::InternetGateway
@@ -51,6 +55,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Ref EnvironmentName
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     InternetGatewayAttachment:
         Type: AWS::EC2::VPCGatewayAttachment
@@ -68,6 +76,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Public Subnet (AZ1)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     PublicSubnet2:
         Type: AWS::EC2::Subnet
@@ -79,6 +91,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Public Subnet (AZ2)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     PrivateSubnet1:
         Type: AWS::EC2::Subnet
@@ -90,6 +106,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     PrivateSubnet2:
         Type: AWS::EC2::Subnet
@@ -101,6 +121,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     PublicDBSubnetGroup:
         Type: AWS::RDS::DBSubnetGroup
@@ -113,6 +137,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Public DB Subnet Group
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     NatGateway1EIP:
         Type: AWS::EC2::EIP
@@ -145,6 +173,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Public Routes
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     DefaultPublicRoute:
         Type: AWS::EC2::Route
@@ -173,6 +205,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Private Routes (AZ1)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     DefaultPrivateRoute1:
         Type: AWS::EC2::Route
@@ -194,6 +230,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} Private Routes (AZ2)
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     DefaultPrivateRoute2:
         Type: AWS::EC2::Route
