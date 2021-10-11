@@ -45,6 +45,10 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Ref EnvironmentName
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: Admin
 
     LoadBalancerListener:
         Type: AWS::ElasticLoadBalancingV2::Listener
@@ -70,8 +74,8 @@ Resources:
                   TargetGroupArn: !Ref DefaultTargetGroup
 
     # We define a default target group here, as this is a mandatory Parameter
-    # when creating an Application Load Balancer Listener. 
-    # However, this is not used - instead a target group is created per-service 
+    # when creating an Application Load Balancer Listener.
+    # However, this is not used - instead a target group is created per-service
     # in each service template (../services/*)
     DefaultTargetGroup:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -110,6 +114,6 @@ Outputs:
     SslCertificate:
         Value:
             !If [ SslCertificate, True, False ]
-    
+
     CanonicalHostedZoneId:
         Value: !GetAtt LoadBalancer.CanonicalHostedZoneID

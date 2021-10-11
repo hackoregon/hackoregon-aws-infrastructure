@@ -101,10 +101,10 @@ Parameters:
 Resources:
 
 ## This service definition introduces NetworkConfiguration and lacks PlacementStrategies and Role
-    Service: 
+    Service:
         Type: AWS::ECS::Service
         DependsOn: ListenerRule
-        Properties: 
+        Properties:
             Cluster: !Ref Cluster
             DeploymentConfiguration:
                 MaximumPercent: 200
@@ -120,10 +120,15 @@ Resources:
                       - !Select [ 0, !Ref Subnets ]
                       - !Select [ 1, !Ref Subnets ]
             TaskDefinition: !Ref TaskDefinition
-            LoadBalancers: 
+            LoadBalancers:
                 - ContainerName: !Ref ProjectName
                   ContainerPort: !Ref ContainerPort
                   TargetGroupArn: !Ref TargetGroup
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: !Ref ProjectName
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
@@ -136,6 +141,11 @@ Resources:
               - FARGATE
             ExecutionRoleArn: !Ref ECSTaskExecutionRole
             TaskRoleArn: !Ref TaskRole
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: !Ref ProjectName
             ContainerDefinitions:
                 - Name: !Ref ProjectName
                   Essential: true
@@ -229,8 +239,8 @@ Resources:
     # This IAM Role grants the Fargate-based service access to register/unregister with the
     # Application Load Balancer (ALB). It is based on the default documented here:
     # http://docs.aws.amazon.com/AmazonECS/latest/developerguide/service_IAM_role.html
-    # 
-    # It also has the side-effect of allowing other parts of the stack to attach other IAM policies 
+    #
+    # It also has the side-effect of allowing other parts of the stack to attach other IAM policies
     # such as allowing SSM access.
     TaskRole:
         Type: AWS::IAM::Role

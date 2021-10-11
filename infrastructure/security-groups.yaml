@@ -19,7 +19,7 @@ Parameters:
 Resources:
 
 ## TODO: Refactor these security groups so that ECSHostSecurityGroup references
-## the "web server access" and "SSH access" that is defined as common, and then 
+## the "web server access" and "SSH access" that is defined as common, and then
 ## also point BastionHost and LoadBalancer at these common resources
 
   # This security group defines who/where is allowed to access the Bastion host directly.
@@ -37,6 +37,10 @@ Resources:
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-Bastion-Hosts
+              - Key: Account
+                Value: HackOregon
+              - Key: Project
+                Value: Admin
 
   # This security group defines who/where is allowed to access the ECS hosts directly.
   ECSHostSecurityGroup:
@@ -52,6 +56,10 @@ Resources:
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-ECS-Hosts
+              - Key: Account
+                Value: HackOregon
+              - Key: Project
+                Value: Admin
 
   # This security group is meant for production-protected databases.
   # This security group defines who/where is allowed to access the DB hosts directly.
@@ -68,6 +76,10 @@ Resources:
         Tags:
             - Key: Name
               Value: !Sub ${EnvironmentName}-DB-Hosts
+            - Key: Account
+              Value: HackOregon
+            - Key: Project
+              Value: Admin
 
   # This security group is meant for developer-accessible databases.
   DBPublicSecurityGroup:
@@ -84,6 +96,10 @@ Resources:
         Tags:
             - Key: Name
               Value: !Sub ${EnvironmentName}-DB-Public-Hosts
+            - Key: Account
+              Value: HackOregon
+            - Key: Project
+              Value: Admin
 
   # This security group defines who/where is allowed to access load balancer
   LoadBalancerSecurityGroup:
@@ -104,6 +120,10 @@ Resources:
         Tags:
             - Key: Name
               Value: !Sub ${EnvironmentName}-LoadBalancers
+            - Key: Account
+              Value: HackOregon
+            - Key: Project
+              Value: Admin
 
   # This security group defines who/where is allowed to access the Tasks running in ECS
   ECSTaskSecurityGroup:
@@ -129,6 +149,10 @@ Resources:
           Tags:
               - Key: Name
                 Value: !Sub ${EnvironmentName}-ECS-Hosts
+              - Key: Account
+                Value: HackOregon
+              - Key: Project
+                Value: Admin
 
 Outputs:
 

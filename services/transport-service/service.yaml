@@ -36,7 +36,7 @@ Parameters:
     ProjSettingsDir:
         Description: the relative directory path where we keep the app config
         Type: String
-    
+
     Host:
         Description: The host path to register with the Application Load Balancer
         Type: String
@@ -67,11 +67,21 @@ Resources:
                 - ContainerName: "transport-service"
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: transport-service
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
             Family: transport-service
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: transport-service
             ContainerDefinitions:
                 - Name: transport-service
                   Essential: true

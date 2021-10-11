@@ -60,6 +60,12 @@ Resources:
                 - Key: Name
                   Value: !Sub ${EnvironmentName} ECS host
                   PropagateAtLaunch: true
+                - Key: Account
+                  Value: HackOregon
+                  PropagateAtLaunch: true
+                - Key: Project
+                  Value: Admin
+                  PropagateAtLaunch: true
         CreationPolicy:
             ResourceSignal:
                 Timeout: PT15M
@@ -176,7 +182,7 @@ Resources:
                         }]
                     }
                 - PolicyName: ssm-access
-                  PolicyDocument: 
+                  PolicyDocument:
                     {
                         "Version": "2012-10-17",
                         "Statement": [
@@ -221,7 +227,7 @@ Resources:
             Roles:
                 - !Ref ECSRole
 
-    # This is a role which is used by the ECS service to perform ECS API actions on your 
+    # This is a role which is used by the ECS service to perform ECS API actions on your
     # behalf, such pulling container images from ECR, or storing container application
     # logs in CloudWatch.
     ECSTaskExecutionRole:

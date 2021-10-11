@@ -55,11 +55,20 @@ Resources:
                 - ContainerName: "housing-affordability-service"
                   ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
-
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: housing-affordability-service
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
             Family: housing-affordability-service
+            Tags:
+                - Key: Account
+                  Value: HackOregon
+                - Key: Project
+                  Value: housing-affordability-service
             ContainerDefinitions:
                 - Name: housing-affordability-service
                   Essential: true
@@ -106,7 +115,7 @@ Resources:
                 - Field: path-pattern
                   Values:
                     - !Ref Path
- 
+
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward
