@@ -73,6 +73,26 @@ Resources:
                 - Type: forward
                   TargetGroupArn: !Ref DefaultTargetGroup
 
+    # ALB global redirect from HTTP to HTTPS
+
+    PublicLoadBalancerHttpRedirectListener:
+        Type: AWS::ElasticLoadBalancingV2::Listener
+        DependsOn:
+        - LoadBalancer
+        Properties:
+        DefaultActions:
+            - RedirectConfig:
+                Host: "#{host}"
+                Path: "/#{path}"
+                Port: 443
+                Protocol: "HTTPS"
+                Query: "#{query}"
+                StatusCode: HTTP_301
+            Type: redirect
+        LoadBalancerArn: !Ref LoadBalancer # don't know how to construct this - see https://stackoverflow.com/questions/52085478/aws-cloudformation-application-load-balancer-how-to-redirect-http-listener-to/53498717#53498717
+        Port: 80
+        Protocol: HTTP
+
     # We define a default target group here, as this is a mandatory Parameter
     # when creating an Application Load Balancer Listener.
     # However, this is not used - instead a target group is created per-service
